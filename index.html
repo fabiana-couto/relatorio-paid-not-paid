@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aquisição Paid & Not Paid · Qive</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top"><div class="brand"><div class="logo">Q</div><div><div class="brand-title">Aquisição Paid &amp; Not Paid</div><div class="brand-sub">MQL · SQL · Conversão · NB · NMRR · Not Paid atualizado via HubSpot até 13/08/2026</div></div></div><div class="top-right"><span class="context" id="stamp"></span><span class="context" id="context"></span><button class="refresh" id="refreshBtn" onclick="atualizarDados()">Atualizar dados</button><button class="present" onclick="toggleFull()">Apresentar</button></div></header><div class="refresh-bar"><span class="refresh-status" id="refreshStatus"></span></div>
+<section class="filters"><span class="filter-title">Filtros</span>
+<div class="pop"><button class="trigger" onclick="toggleMenu('pageMenu',event)"><small>Página</small><strong id="pageLabel">Paid</strong><span class="chev">▼</span></button><div class="menu" id="pageMenu" style="min-width:285px" onclick="event.stopPropagation()"><div class="menu-title">Visão de aquisição</div><div class="menu-note">As duas visões de Not Paid são independentes: uma usa somente Fonte recente e a outra somente Tipo de mídia.</div><button class="option on" data-page="paid" onclick="setPage('paid',event)">Paid <span class="check">✓</span></button><button class="option" data-page="notpaid_last" onclick="setPage('notpaid_last',event)">Not Paid · Fonte recente <span class="check">✓</span></button><button class="option" data-page="notpaid_media" onclick="setPage('notpaid_media',event)">Not Paid · Tipo de mídia <span class="check">✓</span></button></div></div>
+<div class="pop"><button class="trigger" onclick="toggleMenu('monthMenu',event)"><small>Mês</small><strong id="monthLabel"></strong><span class="chev">▼</span></button><div class="menu" id="monthMenu"><div class="menu-title">Selecionar mês</div><div class="month-grid" id="monthGrid"></div></div></div>
+<div class="pop"><button class="trigger" onclick="toggleMenu('cmpMenu',event)"><small>Comparar com</small><strong id="cmpLabel">Sem comparação</strong><span class="chev">▼</span></button><div class="menu" id="cmpMenu" style="min-width:250px" onclick="event.stopPropagation()"><div class="menu-title">Comparar mês contra mês</div><div class="menu-note">Abre uma leitura lado a lado por categoria, com MQL, SQL e taxa dos dois meses.</div><div class="month-grid" id="cmpGrid"></div><button class="option on" data-cmp="none" onclick="setCompare(null,event)" style="margin-top:8px">Sem comparação <span class="check">✓</span></button></div></div>
+<div class="pop"><button class="trigger" id="platTrigger" onclick="toggleMenu('platMenu',event)"><small>Plataforma</small><strong id="platLabel">Todas as plataformas</strong><span class="chev">▼</span></button><div class="menu" id="platMenu" style="min-width:250px" onclick="event.stopPropagation()"><div class="menu-title">Plataforma de mídia</div><div class="menu-note" id="platNota">Mídia paga por Tipo de mídia, plataforma por Canal. Em Campanha, pelo naming.</div><button class="option on" data-plat="all" onclick="setPlatform('all',event)">Todas as plataformas <span class="check">✓</span></button><button class="option" data-plat="google" onclick="setPlatform('google',event)">Google <span class="check">✓</span></button><button class="option" data-plat="meta" onclick="setPlatform('meta',event)">Meta <span class="check">✓</span></button><button class="option" data-plat="linkedin" onclick="setPlatform('linkedin',event)">LinkedIn <span class="check">✓</span></button><button class="option" data-plat="bing" onclick="setPlatform('bing',event)">Bing <span class="check">✓</span></button></div></div>
+<div class="pop"><button class="trigger" onclick="toggleMenu('segMenu',event)"><small>Segmentos</small><strong id="segLabel">Todos os segmentos</strong><span class="chev">▼</span></button><div class="menu" id="segMenu" style="min-width:285px" onclick="event.stopPropagation()"><div class="menu-title">Tamanho da empresa</div><div class="menu-note">Selecione um ou mais segmentos. Os indicadores e gráficos serão somados.</div><button class="option on" data-seg="all" onclick="selectAllSegments(event)">Todos os segmentos <span class="check">✓</span></button><button class="option on" data-seg="PP" onclick="toggleSegment('PP',event)">PP · abaixo de 10M <span class="check">✓</span></button><button class="option on" data-seg="P" onclick="toggleSegment('P',event)">P · 10M a 100M <span class="check">✓</span></button><button class="option on" data-seg="M" onclick="toggleSegment('M',event)">M · 100M a 500M <span class="check">✓</span></button><button class="option on" data-seg="G" onclick="toggleSegment('G',event)">G · 500M a 1B <span class="check">✓</span></button><button class="option on" data-seg="XG" onclick="toggleSegment('XG',event)">XG · acima de 1B <span class="check">✓</span></button><button class="option on" data-seg="UNKNOWN" onclick="toggleSegment('UNKNOWN',event)">Sem segmento <span class="check">✓</span></button></div></div>
+<div class="pop" id="sourceFilter"><button class="trigger" onclick="toggleMenu('sourceMenu',event)"><small>Fonte</small><strong id="sourceLabel">Fonte recente</strong><span class="chev">▼</span></button><div class="menu" id="sourceMenu" style="min-width:255px"><div class="menu-title">Dimensão de atribuição</div><button class="option" data-source="campaign" onclick="setSource('campaign')">Campanha de aquisição <span>✓</span></button><button class="option" data-source="first" onclick="setSource('first')">Fonte original <span>✓</span></button><button class="option on" data-source="last" onclick="setSource('last')">Fonte recente <span>✓</span></button><button class="option" data-source="media" onclick="setSource('media')">Tipo de mídia / Canal <span>✓</span></button></div></div>
+<div class="spacer"></div><span class="formula-chip">% MQL &gt; SQL = SQL do mês ÷ MQL do mês × 100</span></section>
+<main class="main"><div id="app"></div></main>
+
+<script src="data/base.js"></script>
+<script src="data/last.js"></script>
+<script src="data/first.js"></script>
+<script src="data/media.js"></script>
+<script src="data/notpaid_media.js"></script>
+<script src="data/notpaid_last.js"></script>
+<script src="data/campaign-base.js"></script>
+<script src="data/campaign-mql.js"></script>
+<script src="data/campaign-sql.js"></script>
+<script src="data/campaign-nb.js"></script>
+<script src="data/campaign-nmrr.js"></script>
+<script src="data/campaign-perdidos.js"></script>
+<script src="app-1.js"></script>
+<script src="app-2.js"></script>
+</body>
+</html>
