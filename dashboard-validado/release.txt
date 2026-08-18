@@ -1,0 +1,4 @@
+Dashboard validado publicado em URL isolada.
+Release: 2026-08-18-01
+Fonte imutável: 62c82d62b6bc025859fc8452c1e7337ab36d8d41
+Arquivo: dashboard-validado/index.html
