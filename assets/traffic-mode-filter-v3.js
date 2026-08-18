@@ -202,7 +202,9 @@
       '[id*="investimento"],'+
       '[id*="budget"],'+
       '[id*="verba"]'
-    ).forEach(function(element){elements.add(element)});
+    ).forEach(function(element){
+      if(element!==document.body&&element!==document.documentElement) elements.add(element);
+    });
 
     document.querySelectorAll('h1,h2,h3,h4,.panel-title,.enh-title,.table-head,.method-title').forEach(function(heading){
       if(!investmentHeading(heading.textContent)) return;
