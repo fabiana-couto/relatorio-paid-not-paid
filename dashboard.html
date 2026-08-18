@@ -10,11 +10,11 @@
 <style>html,body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:#f4f5f7;color:#17191d}#load{display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px}#load b{display:block;margin-bottom:6px}</style>
 </head>
 <body>
-<div id="load">Carregando dashboard…</div><!-- revision: realizado-only-20260817-2318 -->
+<div id="load">Carregando dashboard…</div><!-- revision: budget-oficial-20260817-2332 -->
 <script>
 (async()=>{
   try{
-    const rev='realizado-only-20260817-2318';
+    const rev='budget-oficial-20260817-2332';
     const files=[
       'assets/dashboard-v17-p1.b64',
       'assets/dashboard-v17-p2.b64',
@@ -28,16 +28,23 @@
       if(!r.ok) throw new Error(f+' '+r.status);
       return (await r.text()).trim();
     }));
-    const pr=await fetch('assets/investment-realized-only-patch.js?v='+rev,{cache:'no-store'});
-    if(!pr.ok) throw new Error('patch '+pr.status);
-    const patchJs=await pr.text();
+    const patchFiles=[
+      'assets/investment-realized-only-patch.js',
+      'assets/budget-history-official-patch.js'
+    ];
+    const patches=[];
+    for(const f of patchFiles){
+      const r=await fetch(f+'?v='+rev,{cache:'no-store'});
+      if(!r.ok) throw new Error(f+' '+r.status);
+      patches.push(await r.text());
+    }
     const b64=parts.join('');
     const raw=atob(b64);
     const bytes=new Uint8Array(raw.length);
     for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     let html=await new Response(stream).text();
-    html=html.replace('</body>','<script>'+patchJs+'<\/script></body>');
+    html=html.replace('</body>','<script>'+patches.join('\n')+'<\/script></body>');
     document.open();
     document.write(html);
     document.close();
