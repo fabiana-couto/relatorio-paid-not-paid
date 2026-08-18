@@ -138,7 +138,7 @@
           ANALYSIS_LABEL[source]+' <span class="check">✓</span>'+
         '</button>';
       }).join('');
-    label.textContent=ANYSIS_LABEL[selected];
+    label.textContent=ANALYSIS_LABEL[selected];
   }
 
   function encodeDisplay(element){
