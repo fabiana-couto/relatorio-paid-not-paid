@@ -10,11 +10,11 @@
 <style>html,body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:#f4f5f7;color:#17191d}#load{display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px}#load b{display:block;margin-bottom:6px}</style>
 </head>
 <body>
-<div id="load">Carregando dashboard…</div><!-- revision: budget-oficial-20260817-2332 -->
+<div id="load">Carregando dashboard…</div><!-- revision: notpaid-latest-20260817-2355 -->
 <script>
 (async()=>{
   try{
-    const rev='budget-oficial-20260817-2332';
+    const rev='notpaid-latest-20260817-2355';
     const files=[
       'assets/dashboard-v17-p1.b64',
       'assets/dashboard-v17-p2.b64',
@@ -30,7 +30,8 @@
     }));
     const patchFiles=[
       'assets/investment-realized-only-patch.js',
-      'assets/budget-history-official-patch.js'
+      'assets/budget-history-official-patch.js',
+      'assets/notpaid-latest-source-patch.js'
     ];
     const patches=[];
     for(const f of patchFiles){
