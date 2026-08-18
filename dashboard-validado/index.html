@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Qive · Aquisição Paid & Not Paid · versão validada</title>
+  <style>body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;margin:0;background:#fff;color:#191919}#load{padding:24px}</style>
+</head>
+<body>
+<div id="load">Carregando versão validada do dashboard…</div>
+<script>
+(async()=>{
+  try{
+    const rev='dashboard-validado-20260818-01';
+    const base='https://raw.githubusercontent.com/fabiana-couto/relatorio-paid-not-paid/62c82d62b6bc025859fc8452c1e7337ab36d8d41/';
+    const files=[
+      'assets/dashboard-v17-p1.b64',
+      'assets/dashboard-v17-p2.b64',
+      'assets/dashboard-v17-p3a.b64',
+      'assets/dashboard-v17-p3b.b64',
+      'assets/dashboard-v17-p3c.b64',
+      'assets/dashboard-v17-p3d.b64'
+    ];
+    const getText=async file=>{
+      const response=await fetch(base+file+'?v='+rev,{cache:'no-store'});
+      if(!response.ok) throw new Error(file+' · HTTP '+response.status);
+      return await response.text();
+    };
+    const unpack=async file=>{
+      const packedRaw=atob((await getText(file)).trim());
+      const packedBytes=new Uint8Array(packedRaw.length);
+      for(let i=0;i<packedRaw.length;i++) packedBytes[i]=packedRaw.charCodeAt(i);
+      if(typeof DecompressionStream!=='function') throw new Error('Este navegador não oferece suporte à descompressão necessária.');
+      const packedStream=new Blob([packedBytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+      return await new Response(packedStream).text();
+    };
+    const parts=await Promise.all(files.map(async file=>(await getText(file)).trim()));
+    const patches=[];
+    for(const file of [
+      'assets/investment-realized-only-patch.js',
+      'assets/budget-history-official-patch.js',
+      'assets/notpaid-latest-source-patch.js'
+    ]) patches.push(await getText(file));
+    patches.push(await unpack('assets/traffic-mode-filter-v4.js.gz.b64'));
+    patches.push(await unpack('assets/layout-ux-review-patch.js.gz.b64'));
+
+    const raw=atob(parts.join(''));
+    const bytes=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    let dashboard=await new Response(stream).text();
+    dashboard=dashboard.replace('</body>','<script>'+patches.join('\n')+'<\\/script></body>');
+    document.open();
+    document.write(dashboard);
+    document.close();
+  }catch(error){
+    const load=document.getElementById('load');
+    if(load) load.textContent='Falha ao carregar a versão validada: '+error.message;
+    console.error(error);
+  }
+})();
+</script>
+</body>
+</html>
