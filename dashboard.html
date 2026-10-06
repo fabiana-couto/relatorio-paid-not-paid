@@ -4063,4 +4063,319 @@ setTimeout(render,450);setTimeout(render,1500);
   setTimeout(refresh,400);setTimeout(refresh,1800);
 })({"medium":{"SMB":{"Google":{"mql":36,"sql":7,"nb":3,"nmrr":316},"Meta":{"mql":101,"sql":2,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":2,"nb":2,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":1,"nb":0,"nmrr":0}}},"original":{"SMB":{"Google":{"mql":86,"sql":8,"nb":5,"nmrr":557.5},"Meta":{"mql":41,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":1,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":11,"sql":3,"nb":0,"nmrr":0}},"KA":{"Google":{"mql":13,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":0,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":4,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"latest":{"SMB":{"Google":{"mql":34,"sql":7,"nb":2,"nmrr":0},"Meta":{"mql":94,"sql":2,"nb":1,"nmrr":241.5},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":9,"sql":2,"nb":2,"nmrr":316}},"KA":{"Google":{"mql":7,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":2,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"campaign":{"SMB":{"Google":{"mql":36,"sql":7,"nb":3,"nmrr":316},"Meta":{"mql":101,"sql":2,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":2,"nb":2,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":1,"nb":0,"nmrr":0}}}},{"SMB":{"geral_paid_perf_conversao_nonbranded_search_google":31,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":15,"geral_paid_perf_conversao_generic_performancemax_google":2,"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_img_meta_aon_fundo":61,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_img_meta_aon_fundo_v2_geracao_lm":19,"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_conteudo-impulsionado_meta_aon_fundo":6,"google":2,"{campaign}":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_compras_geracao_lm":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":1},"KA":{"geral_paid_perf_conversao_generic_performancemax_google":1,"aquisicao_ka_geral_paid-digital_perf_conversao_portal-fornecedores_generico_conversa_linkedin_captura-de-demanda_fundo_geracao_lm":7,"aquisicao_cross_geral_paid-digital_perf_conversao_gestao-financeira_proprietario_conteudo-impulsionado_meta_webinar_perene_webinar-always-on-split-maio":2,"geral_paid_perf_conversao_nonbranded_search_google":4,"geral_paid_perf_conversao_institucional_search_google":2,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":1}});
 </script>
+<script id="master-dashboard-v53">
+(function masterV53(OCT,CAM_MQL){
+  const CH=['Google','Meta','LinkedIn','Outros'];
+  const z=()=>({mql:0,sql:0,nb:0,nmrr:0});
+  const n=v=>Number(v||0);
+  const add=(a,b)=>({mql:n(a.mql)+n(b.mql),sql:n(a.sql)+n(b.sql),nb:n(a.nb)+n(b.nb),nmrr:n(a.nmrr)+n(b.nmrr)});
+  const fmt=v=>n(v).toLocaleString('pt-BR',{maximumFractionDigits:1});
+  const money=v=>n(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});
+  const per=v=>n(v).toFixed(1).replace('.',',')+'%';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const dimLabel=d=>d==='medium'?'Tipo de Mídia':d==='original'?'Fonte Original':d==='latest'?'Fonte Recente':'Campanha de Aquisição';
+  const normalizeMonth=m=>String(m||'').startsWith('Out/26')?'Out/26':String(m||'');
+  const allMonths=()=>{
+    const a=(typeof HIST_MONTHS!=='undefined'?HIST_MONTHS.slice():(typeof DATA!=='undefined'&&Array.isArray(DATA.months)?DATA.months.slice():[])).filter((x,i,arr)=>arr.indexOf(x)===i);
+    if(!a.includes('Out/26'))a.push('Out/26');
+    return a;
+  };
+  const priorChannel=window.channelMetric;
+
+  function state53(){
+    try{
+      const s=typeof state==='function'?state():{};
+      return {...s,m:normalizeMonth(s.m),c:normalizeMonth(s.c)};
+    }catch(e){return {bu:'Todos',dim:'medium',ch:'Todos os canais',front:'Todas',m:'Out/26',c:'__none__'}}
+  }
+  function octMetric(bu,dim,ch){
+    const bus=bu==='Todos'?['SMB','KA']:[bu];let out=z();
+    for(const b of bus)out=add(out,OCT?.[dim]?.[b]?.[ch]||z());
+    return out;
+  }
+  function chMetric(month,bu,dim,ch){
+    month=normalizeMonth(month);
+    if(month==='Out/26')return octMetric(bu,dim,ch);
+    try{
+      const v=typeof priorChannel==='function'?priorChannel(month,bu,dim,ch):null;
+      return v?{mql:n(v.mql),sql:n(v.sql),nb:n(v.nb),nmrr:n(v.nmrr)}:z();
+    }catch(e){return z()}
+  }
+  function canon(month,s){
+    month=normalizeMonth(month);
+    if(s.ch!=='Todos os canais')return chMetric(month,s.bu,s.dim,s.ch);
+    return CH.reduce((a,ch)=>add(a,chMetric(month,s.bu,s.dim,ch)),z());
+  }
+  window.channelMetric=chMetric;
+  window.canonicalMetricV27=(month,s)=>canon(month,{...state53(),...(typeof s==='object'?s:{dim:s})});
+  window.canonicalMetricV34=window.canonicalMetricV27;
+
+  function renderKpis53(){
+    const s=state53(),a=canon(s.m,s),el=document.getElementById('kpis');if(!el)return;
+    const vals=[
+      ['MQL',fmt(a.mql)],
+      ['SQL',fmt(a.sql)],
+      ['MQL → SQL',per(a.mql?100*a.sql/a.mql:0)],
+      ['Novos Negócios',fmt(a.nb)],
+      ['NMRR',money(a.nmrr)]
+    ];
+    el.innerHTML=vals.map(([l,v])=>`<div class="card kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="hint">${s.m==='Out/26'?'Atualizado até 06/10/2026 · ':''}${dimLabel(s.dim)} · ${s.bu} · ${s.ch}</div></div>`).join('');
+    const p=document.getElementById('period');if(p)p.textContent=`${s.m==='Out/26'?'Out/26 MTD':s.m} · ${dimLabel(s.dim)} · ${s.ch}`;
+  }
+
+  function campaignFront(name,month){
+    try{
+      if(typeof campaignInfo==='function'){
+        const f=campaignInfo(name,month)?.front;
+        if(f)return f;
+      }
+    }catch(e){}
+    const x=String(name).toLowerCase();
+    if(x.startsWith('aquisicao_smb_')||x.startsWith('smb_'))return 'SMB';
+    if(x.startsWith('aquisicao_ka_')||x.startsWith('ka_'))return 'KA';
+    if(x.startsWith('aquisicao_cross_')||x.startsWith('geral_')||x==='google')return 'Cross';
+    return 'Não classificada';
+  }
+  function campaignChannel(name,v){
+    if(v?.channel&&CH.includes(v.channel))return v.channel;
+    const x=String(name).toLowerCase();
+    if(x.includes('linkedin'))return 'LinkedIn';
+    if(x.includes('meta')||x.includes('facebook')||x.includes('instagram'))return 'Meta';
+    if(x.includes('google')||x.includes('search')||x.includes('performance'))return 'Google';
+    return 'Outros';
+  }
+  function entryOK(name){
+    const sel=document.getElementById('entryFilter')?.value||'Todos';
+    if(sel==='Todos')return true;
+    try{return typeof window.entryMatchCampaignV22==='function'?window.entryMatchCampaignV22(name,sel):true}catch(e){return true}
+  }
+  function campaignMetric(name,month,bu){
+    month=normalizeMonth(month);
+    const bus=bu==='Todos'?['SMB','KA']:[bu],out={quali:0,mql:0,sql:0,nb:0,nmrr:0,channel:null};
+    if(month==='Out/26'){
+      for(const b of bus){
+        const v=window.CAM41?.[b]?.[name];
+        if(v){
+          out.quali+=n(v.quali);out.mql+=n(v.mql);out.sql+=n(v.sql);out.nb+=n(v.nb);out.nmrr+=n(v.nmrr);out.channel=out.channel||v.channel;
+        }
+      }
+      return out;
+    }
+    if(month==='Set/26 MTD'&&typeof DATA!=='undefined'&&DATA.campaignSep){
+      for(const b of bus){
+        const v=DATA.campaignSep?.[b]?.[name];
+        if(v){for(const k of ['quali','mql','sql','nb','nmrr'])out[k]+=n(v[k])}
+      }
+      return out;
+    }
+    if(month==='Ago/26'&&typeof DATA!=='undefined'&&DATA.campaignAug){
+      for(const b of bus){
+        const v=DATA.campaignAug?.[b]?.[name];
+        if(v){for(const k of ['quali','mql','sql','nb','nmrr'])out[k]+=n(v[k])}
+      }
+      return out;
+    }
+    try{
+      const i=typeof HIST_MONTHS!=='undefined'?HIST_MONTHS.indexOf(month):-1;
+      if(i>=0&&typeof HIST_CAMPAIGN!=='undefined'){
+        for(const b of bus){
+          const v=HIST_CAMPAIGN?.[b]?.[name];
+          if(v){
+            out.mql+=n(v.mql?.[i]);out.sql+=n(v.sql?.[i]);out.nb+=n(v.nb?.[i]);out.nmrr+=n(v.nmrr?.[i]);out.quali+=n(v.quali?.[i]??v.mql?.[i]);
+          }
+        }
+      }
+    }catch(e){}
+    return out;
+  }
+  function campaignNames(bu){
+    const set=new Set(),bus=bu==='Todos'?['SMB','KA']:[bu];
+    for(const b of bus){
+      Object.keys(window.CAM41?.[b]||{}).forEach(x=>set.add(x));
+      try{Object.keys(HIST_CAMPAIGN?.[b]||{}).forEach(x=>set.add(x))}catch(e){}
+      try{Object.keys(DATA?.campaignSep?.[b]||{}).forEach(x=>set.add(x))}catch(e){}
+    }
+    return [...set];
+  }
+  function patchCurrentCampaigns(){
+    if(!window.CAM41)return;
+    for(const bu of ['SMB','KA']){
+      for(const v of Object.values(window.CAM41[bu]||{})){v.mql=0;v.quali=0}
+      for(const [name,count] of Object.entries(CAM_MQL[bu]||{})){
+        if(!window.CAM41[bu][name])window.CAM41[bu][name]={quali:0,mql:0,sql:0,nb:0,nmrr:0,channel:campaignChannel(name)};
+        window.CAM41[bu][name].mql=count;window.CAM41[bu][name].quali=count;
+        if(!window.CAM41[bu][name].channel)window.CAM41[bu][name].channel=campaignChannel(name);
+      }
+    }
+  }
+  patchCurrentCampaigns();
+
+  function campaignRows53(){
+    const s=state53(),metric=document.getElementById('campaignExplorerMetric')?.value||'mql',dir=document.getElementById('campaignSortDir')?.value||'desc';
+    const rows=[];
+    for(const name of campaignNames(s.bu)){
+      const v=campaignMetric(name,s.m,s.bu),ch=campaignChannel(name,v),front=campaignFront(name,s.m);
+      if(s.ch!=='Todos os canais'&&ch!==s.ch)continue;
+      if(s.front&&s.front!=='Todas'&&front!==s.front)continue;
+      if(!entryOK(name))continue;
+      let val=n(v[metric]);
+      if(metric==='conv')val=v.mql?100*v.sql/v.mql:0;
+      let sp=0;try{sp=n(campaignInfo(name,s.m)?.sp)}catch(e){}
+      if(metric==='spend')val=sp;
+      if(metric==='cpl')val=v.quali?sp/v.quali:0;
+      if(metric==='cpmql')val=v.mql?sp/v.mql:0;
+      if(metric==='cpsql')val=v.sql?sp/v.sql:0;
+      if(metric==='cpnb')val=v.nb?sp/v.nb:0;
+      if(metric==='roas')val=sp?v.nmrr/sp:0;
+      rows.push({name,v,ch,front,sp,val});
+    }
+    rows.sort((a,b)=>dir==='asc'?a.val-b.val:b.val-a.val);
+    const top=document.getElementById('campaignTopN')?.value||'10';
+    return top==='all'?rows:rows.slice(0,Number(top));
+  }
+  function metricDisplay(metric,val){
+    if(['nmrr','spend','cpl','cpmql','cpsql','cpnb'].includes(metric))return money(val);
+    if(metric==='conv')return per(val);
+    if(metric==='roas')return n(val).toFixed(2).replace('.',',')+'x';
+    return fmt(val);
+  }
+  function renderCampaign53(){
+    const s=state53(),metric=document.getElementById('campaignExplorerMetric')?.value||'mql',rows=campaignRows53();
+    const rank=document.getElementById('campaignRankChart'),hist=document.getElementById('campaignHistoryChart'),tbody=document.getElementById('campaigns');
+    const view=document.getElementById('campaignViewMode')?.value||'both';
+    document.getElementById('campaignVisualWrap')?.classList.toggle('view-hidden',view==='table');
+    document.getElementById('campaignTableWrap')?.classList.toggle('view-hidden',view==='visual');
+    if(rank){
+      const max=Math.max(1,...rows.map(r=>Math.abs(r.val)));
+      rank.innerHTML=rows.length?rows.map(r=>`<div class="rank-row"><div class="rank-name"><span class="pill">${esc(r.front)}</span> ${esc(r.name)}</div><div class="rank-track"><div class="rank-fill" style="width:${Math.max(1,Math.abs(r.val)/max*100)}%"></div></div><div class="rank-value">${metricDisplay(metric,r.val)}</div></div>`).join(''):'<div class="note">Sem campanhas com dados para este filtro.</div>';
+    }
+    const rt=document.getElementById('campaignRankTitle'),rs=document.getElementById('campaignRankSub');
+    if(rt)rt.textContent='Ranking · '+(metric==='mql'?'MQL':metric.toUpperCase());
+    if(rs)rs.textContent=`${s.m==='Out/26'?'Out/26 MTD':s.m} · ${s.bu} · ${s.ch} · ${s.front||'Todas'} · ${document.getElementById('entryFilter')?.value||'Todos'}`;
+    if(hist){
+      const top5=rows.slice(0,5),ms=allMonths();
+      if(top5.length&&typeof svgLines==='function'){
+        hist.innerHTML=svgLines(top5.map(r=>({name:r.name,data:ms.map(m=>{
+          const v=campaignMetric(r.name,m,s.bu);
+          if(metric==='mql'||metric==='sql'||metric==='nb'||metric==='nmrr'||metric==='quali')return n(v[metric==='quali'?'quali':metric]);
+          if(metric==='conv')return v.mql?100*v.sql/v.mql:0;
+          return 0;
+        })})),ms);
+      }else hist.innerHTML='<div class="note">Sem histórico para o filtro selecionado.</div>';
+      const ht=document.getElementById('campaignHistoryTitle'),hs=document.getElementById('campaignHistorySub');
+      if(ht)ht.textContent='Histórico · '+(metric==='mql'?'MQL':metric.toUpperCase());
+      if(hs)hs.textContent=top5.length?`Top ${top5.length} do ranking atual · Jul/25 → Out/26`:'Sem série';
+    }
+    if(tbody){
+      const comp=normalizeMonth(s.c),hasComp=comp&&comp!=='__none__';
+      tbody.innerHTML=rows.map(r=>{
+        const v=r.v,b=hasComp?campaignMetric(r.name,comp,s.bu):z(),conv=v.mql?100*v.sql/v.mql:0;
+        const cpl=v.quali?r.sp/v.quali:0,cpm=v.mql?r.sp/v.mql:0,cps=v.sql?r.sp/v.sql:0,cpn=v.nb?r.sp/v.nb:0,roas=r.sp?v.nmrr/r.sp:0;
+        return `<tr><td><span class="pill">${esc(r.front)}</span></td><td style="min-width:350px;white-space:normal">${esc(r.name)}</td><td class="num">${fmt(v.quali)}</td><td class="num">${fmt(v.mql)}</td><td class="num">${fmt(v.sql)}</td><td class="num">${per(conv)}</td><td class="num">${fmt(v.nb)}</td><td class="num">${money(v.nmrr)}</td><td class="num">${money(r.sp)}</td><td class="num">${money(cpl)}</td><td class="num">${money(cpm)}</td><td class="num">${v.sql?money(cps):'—'}</td><td class="num">${v.nb?money(cpn):'—'}</td><td class="num">${r.sp?roas.toFixed(2).replace('.',',')+'x':'—'}</td><td class="num">${hasComp?fmt(b.mql):'—'}</td><td class="num">${hasComp?fmt(b.sql):'—'}</td><td class="num">—</td><td class="num">${hasComp?fmt(v.mql-b.mql):'—'}</td><td class="num">${hasComp?fmt(v.sql-b.sql):'—'}</td></tr>`;
+      }).join('')||'<tr><td colspan="19">Sem campanhas para o filtro selecionado.</td></tr>';
+    }
+  }
+
+  function ensureCompareOptions(){
+    const ms=allMonths();
+    for(const id of ['cmpMonthA','cmpMonthB']){
+      const e=document.getElementById(id);if(!e)continue;const keep=normalizeMonth(e.value);
+      e.innerHTML=ms.map(m=>`<option value="${m}">${m==='Out/26'?'Out/26 MTD':m}</option>`).join('');
+      if(ms.includes(keep))e.value=keep;else e.value=id==='cmpMonthA'?'Out/26':'Set/26 MTD';
+    }
+  }
+  function renderCompare53(){
+    ensureCompareOptions();
+    const s=state53(),ma=normalizeMonth(document.getElementById('cmpMonthA')?.value||s.m),mb=normalizeMonth(document.getElementById('cmpMonthB')?.value||'Set/26 MTD');
+    const A=canon(ma,s),B=canon(mb,s),cards=document.getElementById('compareCardsV22'),tb=document.getElementById('compareTableV22');if(!cards||!tb)return;
+    const d=(a,b)=>b?100*(a/b-1):null,ta=A.mql?100*A.sql/A.mql:0,tb2=B.mql?100*B.sql/B.mql:0;
+    const row=[['MQL',A.mql,B.mql,'count'],['SQL',A.sql,B.sql,'count'],['MQL→SQL',ta,tb2,'rate'],['NMRR',A.nmrr,B.nmrr,'money']];
+    cards.innerHTML=row.map(([l,a,b,t])=>{
+      const delta=t==='rate'?a-b:d(a,b),val=t==='money'?money(a):t==='rate'?per(a):fmt(a);
+      return `<div class="card period-card"><div class="l">${l} · ${ma==='Out/26'?'Out/26 MTD':ma}</div><div class="v">${val}</div><div class="d ${(delta||0)>=0?'good':'bad'}">${delta==null?'—':`${delta>=0?'+':''}${delta.toFixed(1).replace('.',',')}${t==='rate'?' p.p.':'%'}`}</div></div>`;
+    }).join('');
+    const chs=s.ch==='Todos os canais'?CH:[s.ch];
+    tb.innerHTML=chs.map(ch=>{
+      const a=chMetric(ma,s.bu,s.dim,ch),b=chMetric(mb,s.bu,s.dim,ch);
+      return `<tr><td><span class="pill">${ch}</span></td><td class="num">${fmt(a.mql)}</td><td class="num">${fmt(b.mql)}</td><td class="num">${fmt(a.mql-b.mql)}</td><td class="num">${fmt(a.sql)}</td><td class="num">${fmt(b.sql)}</td><td class="num">${fmt(a.sql-b.sql)}</td><td class="num">${per(a.mql?100*a.sql/a.mql:0)}</td><td class="num">${per(b.mql?100*b.sql/b.mql:0)}</td></tr>`;
+    }).join('');
+    const sub=cards.closest('section')?.querySelector('.title span');if(sub)sub.textContent=`${dimLabel(s.dim)} · ${s.bu} · ${s.ch}`;
+  }
+  window.renderCompare23=renderCompare53;
+  window.renderCompareV22=renderCompare53;
+
+  function monthWeeklyBase(month,bu){
+    month=normalizeMonth(month);
+    if(month==='Out/26'){
+      const s={...state53(),m:'Out/26',bu,ch:'Todos os canais'},t=canon('Out/26',s);
+      return [{label:'Out · 01–06',mql:t.mql,sql:t.sql}];
+    }
+    try{
+      const o=HIST_WEEKLY?.[month]?.[bu];
+      if(!o)return [];
+      return Object.values(o).map(x=>({label:`${month.replace('/26','').replace('/25','')} · ${String(x[0]).padStart(2,'0')}–${String(x[1]).padStart(2,'0')}`,mql:n(x[2]),sql:n(x[3])}));
+    }catch(e){return []}
+  }
+  function reconcile(vals,target){
+    const a=vals.map(v=>Math.max(0,n(v))),sum=a.reduce((x,y)=>x+y,0),t=Math.max(0,Math.round(n(target)));
+    if(!a.length)return [t];if(!sum){const o=a.map(()=>0);o[o.length-1]=t;return o}
+    const raw=a.map(v=>v*t/sum),out=raw.map(Math.floor);let rem=t-out.reduce((x,y)=>x+y,0);
+    raw.map((v,i)=>({i,f:v-Math.floor(v)})).sort((a,b)=>b.f-a.f).slice(0,Math.max(0,rem)).forEach(x=>out[x.i]++);
+    return out;
+  }
+  function weeklyForMonth(month,s,ch){
+    const base=monthWeeklyBase(month,s.bu);if(!base.length)return [];
+    const target=chMetric(month,s.bu,s.dim,ch),ms=reconcile(base.map(x=>x.mql),target.mql),ss=reconcile(base.map(x=>x.sql),target.sql);
+    return base.map((x,i)=>({...x,mql:ms[i],sql:ss[i]}));
+  }
+  function weeklyPoints(s,ch){
+    const mode=document.getElementById('weeklyWindowV53')?.value||'month';
+    if(mode==='month')return weeklyForMonth(s.m,s,ch);
+    const count=mode==='8'?8:12,ms=allMonths(),idx=Math.max(0,ms.indexOf(s.m)),out=[];
+    for(let i=0;i<=idx;i++)out.push(...weeklyForMonth(ms[i],s,ch));
+    return out.slice(-count);
+  }
+  function ensureWeeklyControl(){
+    const view=document.getElementById('view-weekly');if(!view||document.getElementById('weeklyWindowV53'))return;
+    const d=document.createElement('div');d.className='card panel';d.style.marginBottom='12px';
+    d.innerHTML='<div class="explorer-controls"><div class="control"><label>Janela semanal</label><select id="weeklyWindowV53"><option value="month">Mês selecionado</option><option value="8">Últimas 8 semanas</option><option value="12">Últimas 12 semanas</option></select></div><div class="control"><label>Referência</label><div class="hint" style="padding-top:8px">A janela termina no mês selecionado nos filtros globais.</div></div></div>';
+    view.insertBefore(d,view.firstChild);
+    d.querySelector('select').addEventListener('change',renderWeekly53);
+  }
+  function renderWeekly53(){
+    ensureWeeklyControl();const s=state53(),main=document.getElementById('weekly');
+    const pts=weeklyPoints(s,s.ch==='Todos os canais'?'Google':s.ch);
+    const totalPts=weeklyPoints(s,s.ch);
+    if(main){
+      const arr=s.ch==='Todos os canais'?weeklyPoints(s,'Google').map((_,i)=>{
+        const label=weeklyPoints(s,'Google')[i]?.label||'';
+        let m=0,q=0;for(const ch of CH){const p=weeklyPoints(s,ch)[i];m+=n(p?.mql);q+=n(p?.sql)}return {label,mql:m,sql:q}
+      }):totalPts;
+      const mx=Math.max(1,...arr.map(x=>x.mql));
+      main.innerHTML=arr.map((x,i)=>`<div class="barrow"><span>${x.label}</span><div class="track"><div class="fill" style="width:${x.mql/mx*100}%"></div></div><b>${fmt(x.mql)} MQL</b></div><div class="barrow"><span></span><div class="track"><div class="fill orange" style="width:${Math.min(100,x.mql?100*x.sql/x.mql:0)}%"></div></div><span>${fmt(x.sql)} SQL · ${per(x.mql?100*x.sql/x.mql:0)}</span></div>`).join('');
+    }
+    const cm=document.getElementById('weeklyChannelMql'),cs=document.getElementById('weeklyChannelSql');
+    const chs=s.ch==='Todos os canais'?CH:[s.ch],seriesM=[],seriesS=[];let labels=[];
+    for(const ch of chs){const p=weeklyPoints(s,ch);if(!labels.length)labels=p.map(x=>x.label);seriesM.push({name:ch,data:p.map(x=>x.mql)});seriesS.push({name:ch,data:p.map(x=>x.sql)})}
+    if(cm&&typeof svgLines==='function')cm.innerHTML=seriesM.length?svgLines(seriesM,labels):'<div class="note">Sem dados semanais.</div>';
+    if(cs&&typeof svgLines==='function')cs.innerHTML=seriesS.length?svgLines(seriesS,labels):'<div class="note">Sem dados semanais.</div>';
+    const note=document.getElementById('weeklyChannelNote');if(note){note.style.display='block';note.innerHTML=`<b>${document.getElementById('weeklyWindowV53')?.selectedOptions?.[0]?.textContent||'Mês selecionado'}.</b> Fim da janela: ${s.m==='Out/26'?'Out/26 MTD':s.m} · ${dimLabel(s.dim)} · ${s.bu} · ${s.ch}.`;}
+  }
+
+  function renderAll53(){
+    patchCurrentCampaigns();
+    renderKpis53();
+    renderCampaign53();
+    renderCompare53();
+    renderWeekly53();
+  }
+  const ids=['month','bu','dim','channel','front','entryFilter','campaignViewMode','campaignExplorerMetric','campaignTopN','campaignSortDir','cmpMonthA','cmpMonthB'];
+  for(const id of ids){
+    const e=document.getElementById(id);if(e&&!e.dataset.master53){e.addEventListener('change',()=>{setTimeout(renderAll53,0);setTimeout(renderAll53,180);setTimeout(renderAll53,800)},true);e.dataset.master53='1'}
+  }
+  document.addEventListener('click',e=>{if(e.target.closest?.('.tab-v22')){setTimeout(renderAll53,80);setTimeout(renderAll53,500)}},true);
+  const old=window.render;if(typeof old==='function'&&!old.__master53){const w=function(){const r=old.apply(this,arguments);setTimeout(renderAll53,250);return r};w.__master53=true;window.render=w}
+  setTimeout(renderAll53,100);setTimeout(renderAll53,900);setTimeout(renderAll53,2200);
+})({"medium":{"SMB":{"Google":{"mql":36,"sql":7,"nb":3,"nmrr":316},"Meta":{"mql":101,"sql":2,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":2,"nb":2,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":1,"nb":0,"nmrr":0}}},"original":{"SMB":{"Google":{"mql":86,"sql":8,"nb":5,"nmrr":557.5},"Meta":{"mql":41,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":1,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":11,"sql":3,"nb":0,"nmrr":0}},"KA":{"Google":{"mql":13,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":0,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":4,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"latest":{"SMB":{"Google":{"mql":34,"sql":7,"nb":2,"nmrr":0},"Meta":{"mql":94,"sql":2,"nb":1,"nmrr":241.5},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":9,"sql":2,"nb":2,"nmrr":316}},"KA":{"Google":{"mql":7,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":2,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"campaign":{"SMB":{"Google":{"mql":36,"sql":7,"nb":3,"nmrr":316},"Meta":{"mql":101,"sql":2,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":2,"nb":2,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":1,"nb":0,"nmrr":0}}}},{"SMB":{"geral_paid_perf_conversao_nonbranded_search_google":31,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":15,"geral_paid_perf_conversao_generic_performancemax_google":2,"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_img_meta_aon_fundo":61,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_img_meta_aon_fundo_v2_geracao_lm":19,"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_conteudo-impulsionado_meta_aon_fundo":6,"google":2,"{campaign}":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_compras_geracao_lm":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":1},"KA":{"geral_paid_perf_conversao_generic_performancemax_google":1,"aquisicao_ka_geral_paid-digital_perf_conversao_portal-fornecedores_generico_conversa_linkedin_captura-de-demanda_fundo_geracao_lm":7,"aquisicao_cross_geral_paid-digital_perf_conversao_gestao-financeira_proprietario_conteudo-impulsionado_meta_webinar_perene_webinar-always-on-split-maio":2,"geral_paid_perf_conversao_nonbranded_search_google":4,"geral_paid_perf_conversao_institucional_search_google":2,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":1}});
+</script>
 </body></html>
