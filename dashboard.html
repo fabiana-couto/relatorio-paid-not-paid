@@ -3237,4 +3237,148 @@ setTimeout(refresh,100);setTimeout(refresh,1200);
   },true);
 })();
 </script>
+<script id="channel-summary-filter-sync-v47">
+(function patchRunner(){
+  const CHS=['Google','Meta','LinkedIn','Outros'];
+  const num=v=>Number(v||0);
+  const add=(a,b)=>({mql:num(a.mql)+num(b.mql),sql:num(a.sql)+num(b.sql),nb:num(a.nb)+num(b.nb),nmrr:num(a.nmrr)+num(b.nmrr)});
+  const zero=()=>({mql:0,sql:0,nb:0,nmrr:0});
+  const fmt=v=>num(v).toLocaleString('pt-BR',{maximumFractionDigits:1});
+  const money=v=>num(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});
+  const pc=v=>isFinite(v)?Number(v).toFixed(1).replace('.',',')+'%':'—';
+
+  function st(){
+    try{return typeof state==='function'?state():null}catch(e){return null}
+  }
+  function entry(){
+    return document.getElementById('entryFilter')?.value||'Todos';
+  }
+  function channelOf(name,v,month){
+    if(v?.channel&&CHS.includes(v.channel))return v.channel;
+    try{
+      if(typeof platform==='function')return platform(name,month);
+    }catch(e){}
+    const x=String(name||'').toLowerCase();
+    if(x.includes('linkedin'))return 'LinkedIn';
+    if(x.includes('meta')||x.includes('facebook')||x.includes('instagram'))return 'Meta';
+    if(x.includes('google')||x.includes('search')||x.includes('performance'))return 'Google';
+    return 'Outros';
+  }
+  function frontOf(name,month){
+    try{
+      if(typeof campaignInfo==='function')return campaignInfo(name,month)?.front||'Não classificada';
+    }catch(e){}
+    const x=String(name||'').toLowerCase();
+    if(x.startsWith('aquisicao_smb_')||x.startsWith('smb_'))return 'SMB';
+    if(x.startsWith('aquisicao_ka_')||x.startsWith('ka_'))return 'KA';
+    if(x.startsWith('aquisicao_cross_')||x.startsWith('geral_')||x.startsWith('_gs')||x==='google')return 'Cross';
+    return 'Não classificada';
+  }
+  function entryOk(name,selected){
+    if(selected==='Todos')return true;
+    try{
+      if(typeof window.entryMatchCampaignV22==='function')return window.entryMatchCampaignV22(name,selected);
+    }catch(e){}
+    return true;
+  }
+  function addCampaign(map,name,v){
+    if(!map[name])map[name]={mql:0,sql:0,nb:0,nmrr:0,channel:v?.channel};
+    for(const k of ['mql','sql','nb','nmrr'])map[name][k]+=num(v?.[k]);
+    if(v?.channel)map[name].channel=v.channel;
+  }
+  function campaignObject(s){
+    const out={};
+    const bus=s.bu==='Todos'?['SMB','KA']:[s.bu];
+
+    if(s.m==='Out/26'&&window.CAM41){
+      for(const b of bus)for(const [name,v] of Object.entries(window.CAM41[b]||{}))addCampaign(out,name,v);
+      return out;
+    }
+    if(s.m==='Set/26 MTD'&&typeof DATA!=='undefined'&&DATA.campaignSep){
+      for(const b of bus)for(const [name,v] of Object.entries(DATA.campaignSep[b]||{}))addCampaign(out,name,v);
+      return out;
+    }
+    if(s.m==='Ago/26'&&typeof DATA!=='undefined'&&DATA.campaignAug){
+      for(const b of bus)for(const [name,v] of Object.entries(DATA.campaignAug[b]||{}))addCampaign(out,name,v);
+      return out;
+    }
+
+    try{
+      const i=typeof histIdx==='function'?histIdx(s.m):-1;
+      if(i<0||typeof HIST_CAMPAIGN==='undefined')return out;
+      for(const b of bus){
+        for(const [name,v] of Object.entries(HIST_CAMPAIGN[b]||{})){
+          addCampaign(out,name,{
+            mql:num(v.mql?.[i]),sql:num(v.sql?.[i]),nb:num(v.nb?.[i]),nmrr:num(v.nmrr?.[i])
+          });
+        }
+      }
+    }catch(e){}
+    return out;
+  }
+  function filteredCampaignRows(s){
+    const selectedEntry=entry(),selectedFront=s.front||'Todas';
+    const sums=Object.fromEntries(CHS.map(ch=>[ch,zero()]));
+    const obj=campaignObject(s);
+    for(const [name,v] of Object.entries(obj)){
+      const ch=channelOf(name,v,s.m);
+      if(s.ch!=='Todos os canais'&&ch!==s.ch)continue;
+      if(selectedFront!=='Todas'&&frontOf(name,s.m)!==selectedFront)continue;
+      if(!entryOk(name,selectedEntry))continue;
+      sums[ch]=add(sums[ch],v);
+    }
+    return (s.ch==='Todos os canais'?CHS:[s.ch]).map(ch=>({ch,...sums[ch]}));
+  }
+  function canonicalRows(s){
+    const chs=s.ch==='Todos os canais'?CHS:[s.ch];
+    return chs.map(ch=>{
+      let v=zero();
+      try{
+        if(typeof channelMetric==='function')v=channelMetric(s.m,s.bu,s.dim,ch)||zero();
+      }catch(e){}
+      return {ch,...v};
+    });
+  }
+  function render(){
+    const body=document.getElementById('channelSummaryV22'),s=st();
+    if(!body||!s)return;
+    const selectedEntry=entry();
+    const campaignScoped=(s.front&&s.front!=='Todas')||selectedEntry!=='Todos';
+    const rows=campaignScoped?filteredCampaignRows(s):canonicalRows(s);
+    const total=rows.reduce((a,r)=>add(a,r),zero());
+    const tm=num(total.mql),ts=num(total.sql),tn=num(total.nb),tr=num(total.nmrr);
+
+    body.innerHTML=rows.map(r=>{
+      const arpa=r.nb?r.nmrr/r.nb:0;
+      return `<tr><td><span class="pill">${r.ch}</span></td><td class="num">${fmt(r.mql)}</td><td class="num">${pc(tm?r.mql/tm*100:0)}</td><td class="num">${fmt(r.sql)}</td><td class="num">${pc(r.mql?r.sql/r.mql*100:0)}</td><td class="num">${fmt(r.nb)}</td><td class="num">${tn?pc(r.nb/tn*100):'—'}</td><td class="num">${money(r.nmrr)}</td><td class="num">${r.nb?money(arpa):'—'}</td><td class="num">${r.mql?money(r.nmrr/r.mql):'—'}</td></tr>`;
+    }).join('')+`<tr class="total-row-v28"><td>Total do filtro</td><td class="num">${fmt(tm)}</td><td class="num">${tm?'100,0%':'—'}</td><td class="num">${fmt(ts)}</td><td class="num">${pc(tm?ts/tm*100:0)}</td><td class="num">${fmt(tn)}</td><td class="num">${tn?'100,0%':'—'}</td><td class="num">${money(tr)}</td><td class="num">${tn?money(tr/tn):'—'}</td><td class="num">${tm?money(tr/tm):'—'}</td></tr>`;
+
+    const sec=document.getElementById('channelSummarySection');
+    const sub=sec?.querySelector('.title span');
+    if(sub){
+      const dl=s.dim==='medium'?'Tipo de Mídia':s.dim==='original'?'Fonte Original':s.dim==='latest'?'Fonte Recente':'Campanha de Aquisição';
+      sub.textContent=`${s.m==='Out/26'?'Out/26 MTD':s.m} · ${s.bu} · ${dl} · ${s.ch} · Frente: ${s.front||'Todas'} · Entrada: ${selectedEntry}`;
+    }
+  }
+
+  window.renderChannelSummary28=render;
+  const prev=window.render;
+  if(typeof prev==='function'&&!prev.__channelSummaryV47){
+    const wrapped=function(){const r=prev.apply(this,arguments);setTimeout(render,180);return r};
+    wrapped.__channelSummaryV47=true;
+    window.render=wrapped;
+  }
+  for(const id of ['bu','dim','channel','month','front','entryFilter']){
+    const el=document.getElementById(id);
+    if(el&&!el.dataset.summaryV47){
+      el.addEventListener('change',()=>{setTimeout(render,60);setTimeout(render,450)},true);
+      el.dataset.summaryV47='1';
+    }
+  }
+  document.addEventListener('click',e=>{
+    if(e.target.closest?.('.tab-v22'))setTimeout(render,180);
+  },true);
+  setTimeout(render,250);setTimeout(render,1300);
+})();
+</script>
 </body></html>
