@@ -3849,4 +3849,143 @@ setTimeout(render,450);setTimeout(render,1500);
   setTimeout(refresh50,300);setTimeout(refresh50,1600);
 })({"medium":{"SMB":{"Google":{"mql":33,"sql":6,"nb":3,"nmrr":316},"Meta":{"mql":101,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":2,"sql":1,"nb":1,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":1,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":0,"nb":0,"nmrr":0}}},"original":{"SMB":{"Google":{"mql":85,"sql":6,"nb":4,"nmrr":557.5},"Meta":{"mql":41,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":1,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":11,"sql":1,"nb":0,"nmrr":0}},"KA":{"Google":{"mql":13,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":0,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":4,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"latest":{"SMB":{"Google":{"mql":33,"sql":4,"nb":2,"nmrr":0},"Meta":{"mql":94,"sql":1,"nb":1,"nmrr":241.5},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":9,"sql":2,"nb":1,"nmrr":316}},"KA":{"Google":{"mql":7,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":2,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}}},{"SMB":{"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":{"mql":15,"channel":"Meta"},"geral_paid_perf_conversao_generic_performancemax_google":{"mql":2,"channel":"Google"},"geral_paid_perf_conversao_nonbranded_search_google":{"mql":30,"channel":"Google"},"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_img_meta_aon_fundo":{"mql":61,"channel":"Meta"},"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_img_meta_aon_fundo_v2_geracao_lm":{"mql":19,"channel":"Meta"},"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_conteudo-impulsionado_meta_aon_fundo":{"mql":6,"channel":"Meta"},"google":{"mql":2,"channel":"Outros"},"{campaign}":{"mql":1,"channel":"Google"},"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_compras_geracao_lm":{"mql":1,"channel":"LinkedIn"},"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":{"mql":1,"channel":"LinkedIn"}},"KA":{"geral_paid_perf_conversao_generic_performancemax_google":{"mql":1,"channel":"Google"},"aquisicao_ka_geral_paid-digital_perf_conversao_portal-fornecedores_generico_conversa_linkedin_captura-de-demanda_fundo_geracao_lm":{"mql":7,"channel":"LinkedIn"},"aquisicao_cross_geral_paid-digital_perf_conversao_gestao-financeira_proprietario_conteudo-impulsionado_meta_webinar_perene_webinar-always-on-split-maio":{"mql":2,"channel":"Meta"},"geral_paid_perf_conversao_nonbranded_search_google":{"mql":4,"channel":"Google"},"geral_paid_perf_conversao_institucional_search_google":{"mql":2,"channel":"Google"},"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":{"mql":1,"channel":"Meta"},"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":{"mql":1,"channel":"LinkedIn"}}});
 </script>
+<script id="weekly-month-sync-v51">
+(function weeklyFixV51(currentPatch){
+  const CH=['Google','Meta','LinkedIn','Outros'];
+  const num=v=>Number(v||0);
+  const fmt=v=>typeof fmtN==='function'?fmtN(v):num(v).toLocaleString('pt-BR');
+  const pc=v=>typeof pct==='function'?pct(v):num(v).toFixed(1).replace('.',',')+'%';
+  const zero=()=>({mql:0,sql:0,nb:0,nmrr:0});
+  const add=(a,b)=>({mql:num(a.mql)+num(b.mql),sql:num(a.sql)+num(b.sql),nb:num(a.nb)+num(b.nb),nmrr:num(a.nmrr)+num(b.nmrr)});
+  const labelDim=d=>d==='medium'?'Tipo de Mídia':d==='original'?'Fonte Original':d==='latest'?'Fonte Recente':'Campanha de Aquisição';
+
+  // Refresh current October totals used by the final canonical layer.
+  try{
+    if(typeof currentPatch==='object' && typeof CUR!=='undefined'){
+      for(const d of ['medium','original','latest'])for(const b of ['SMB','KA'])for(const ch of CH){
+        if(currentPatch[d]?.[b]?.[ch] && CUR?.[d]?.[b]?.[ch]) Object.assign(CUR[d][b][ch],currentPatch[d][b][ch]);
+      }
+    }
+  }catch(e){}
+
+  function reconcile(raw,total){
+    const a=(raw||[]).map(x=>Math.max(0,num(x)));
+    const target=Math.max(0,Math.round(num(total)));
+    if(!a.length)return [target];
+    const sum=a.reduce((x,y)=>x+y,0);
+    if(!sum){const z=a.map(()=>0);z[z.length-1]=target;return z}
+    const scaled=a.map(v=>v*target/sum),out=scaled.map(Math.floor);
+    let rem=target-out.reduce((x,y)=>x+y,0);
+    scaled.map((v,i)=>({i,f:v-Math.floor(v)})).sort((a,b)=>b.f-a.f).slice(0,Math.max(0,rem)).forEach(x=>out[x.i]++);
+    return out;
+  }
+  function canonical(st,ch){
+    try{return window.canonicalMetricV27(st.m,{...st,ch:ch||st.ch})||zero()}catch(e){return zero()}
+  }
+  function histBase(st){
+    if(st.m==='Out/26'){
+      const t=canonical({...st,ch:'Todos os canais'});
+      return {labels:['01–06'],mql:[t.mql],sql:[t.sql],native:true};
+    }
+    const w=typeof HIST_WEEKLY!=='undefined'?HIST_WEEKLY?.[st.m]?.[st.bu]:null;
+    if(!w)return null;
+    return {
+      labels:Object.values(w).map(x=>String(x[0]).padStart(2,'0')+'–'+String(x[1]).padStart(2,'0')),
+      mql:Object.values(w).map(x=>num(x[2])),
+      sql:Object.values(w).map(x=>num(x[3])),
+      native:true
+    };
+  }
+  function septemberNative(st,ch,metric){
+    try{
+      if(st.m!=='Set/26 MTD'||typeof W35==='undefined'||st.dim==='campaign')return null;
+      const bs=st.bu==='Todos'?['SMB','KA']:[st.bu],out=[0,0,0,0,0];
+      for(const b of bs){
+        const arr=W35?.[st.dim]?.[b]?.[ch]?.[metric]||[];
+        for(let i=0;i<out.length;i++)out[i]+=num(arr[i]);
+      }
+      return out;
+    }catch(e){return null}
+  }
+  function weeklyFiltered(st,ch){
+    const base=histBase(st); if(!base)return null;
+    const target=canonical(st,ch);
+    const nativeM=septemberNative(st,ch,'mql'),nativeS=septemberNative(st,ch,'sql');
+    if(nativeM&&nativeS){
+      return {labels:['01–06','07–13','14–20','21–27','28–30'],mql:reconcile(nativeM,target.mql),sql:reconcile(nativeS,target.sql),derived:false};
+    }
+    return {labels:base.labels,mql:reconcile(base.mql,target.mql),sql:reconcile(base.sql,target.sql),derived:!(st.dim==='medium'&&ch==='Todos os canais')};
+  }
+
+  window.renderWeekly=function(st){
+    const el=document.getElementById('weekly');if(!el)return;
+    const d=weeklyFiltered(st,st.ch);if(!d){el.innerHTML='<div class="hint">Sem dados semanais para o período selecionado.</div>';return}
+    const mx=Math.max(1,...d.mql);
+    el.innerHTML=d.mql.map((m,i)=>`<div class="barrow"><span>W${i+1} · ${d.labels[i]}</span><div class="track"><div class="fill" style="width:${m/mx*100}%"></div></div><b>${fmt(m)} MQL</b></div><div class="barrow"><span></span><div class="track"><div class="fill orange" style="width:${Math.min(100,m?d.sql[i]/m*100:0)}%"></div></div><span>${fmt(d.sql[i])} SQL · ${pc(m?d.sql[i]/m*100:0)}</span></div>`).join('')+
+      `<div class="v40-note"><b>${st.m==='Out/26'?'Outubro MTD até 06/10':'Período '+st.m}.</b> ${d.derived?'Curva semanal histórica reconciliada ao recorte de '+labelDim(st.dim)+' / '+st.ch+'.':'Distribuição semanal histórica do recorte.'} Total: <b>${fmt(d.mql.reduce((a,b)=>a+b,0))} MQL · ${fmt(d.sql.reduce((a,b)=>a+b,0))} SQL</b>.</div>`;
+    const sub=el.closest('.panel')?.querySelector('.title span');if(sub)sub.textContent=`${st.m} · ${st.bu} · ${labelDim(st.dim)} · ${st.ch}`;
+  };
+
+  window.renderWeeklyChannel=function(st){
+    const a=document.getElementById('weeklyChannelMql'),b=document.getElementById('weeklyChannelSql'),note=document.getElementById('weeklyChannelNote');if(!a||!b)return;
+    const chs=st.ch==='Todos os canais'?CH:[st.ch],seriesM=[],seriesS=[];
+    let labels=null,derived=false;
+    for(const ch of chs){
+      const d=weeklyFiltered({...st,ch},ch);if(!d)continue;
+      labels=labels||d.labels;derived=derived||d.derived;
+      seriesM.push({name:ch,data:d.mql});seriesS.push({name:ch,data:d.sql});
+    }
+    if(!seriesM.length){a.innerHTML=b.innerHTML='<div class="note">Sem dados semanais para o período selecionado.</div>';if(note)note.style.display='none';return}
+    a.innerHTML=svgLines(seriesM,labels);b.innerHTML=svgLines(seriesS,labels);
+    if(note){note.style.display='block';note.innerHTML=`<b>${st.m} · ${st.bu} · ${labelDim(st.dim)}.</b> ${derived?'A quebra semanal por canal é reconciliada à curva semanal observada do mês e fecha exatamente nos KPIs mensais do filtro.':'Quebra semanal nativa disponível para este recorte.'}`;}
+    const section=a.closest('section'),sub=section?.querySelector('.title > span');if(sub)sub.textContent=`${st.m} · ${st.bu} · ${labelDim(st.dim)} · ${st.ch}`;
+  };
+
+  function monthKey(m){
+    const map={'Jan/26':'2026-01','Fev/26':'2026-02','Mar/26':'2026-03','Abr/26':'2026-04','Mai/26':'2026-05','Jun/26':'2026-06','Jul/26':'2026-07','Ago/26':'2026-08','Set/26 MTD':'2026-09','Out/26':'2026-10'};
+    return map[m]||null;
+  }
+  function sizeMonthValue(st,size,metric){
+    if(st.m==='Out/26'){
+      try{
+        const seg=size==='M'?'Mid':(['G','XG'].includes(size)?'Enterprise':size==='Unassigned'?'Não classificado':size);
+        const x=typeof segmentRaw==='function'?segmentRaw(seg,'Out/26',st.bu):null;
+        if(x)return num(x[metric]);
+      }catch(e){}
+      return 0;
+    }
+    const k=monthKey(st.m),bs=st.bu==='Todos'?['SMB','KA']:[st.bu];let v=0;
+    try{for(const bu of bs)v+=num(SIZE_MONTH?.[bu]?.[k]?.[size]?.[metric])}catch(e){}
+    return v;
+  }
+  window.renderSizeWeekly=function(){
+    const st=typeof state==='function'?state():null;if(!st)return;
+    const a=document.getElementById('sizeMqlV35'),b=document.getElementById('sizeSqlV35');if(!a||!b)return;
+    const base=histBase(st);if(!base){a.innerHTML=b.innerHTML='<div class="note">Sem dados semanais para o período selecionado.</div>';return}
+    const sizes=['PP','P','M','G','XG','Unassigned'],sm=[],ss=[];
+    for(const sz of sizes){
+      const tm=sizeMonthValue(st,sz,'mql'),ts=sizeMonthValue(st,sz,'sql');
+      if(!tm&&!ts)continue;
+      sm.push({name:sz==='Unassigned'?'Não classificado':sz,data:reconcile(base.mql,tm)});
+      ss.push({name:sz==='Unassigned'?'Não classificado':sz,data:reconcile(base.sql,ts)});
+    }
+    if(!sm.length){a.innerHTML=b.innerHTML='<div class="note">Sem quebra por tamanho para este período.</div>';return}
+    a.innerHTML=svgLines(sm,base.labels);b.innerHTML=svgLines(ss,base.labels);
+    const sec=a.closest('section'),sub=sec?.querySelector('.title > span');if(sub)sub.textContent=`${st.m} · ${st.bu} · distribuição por tamanho reconciliada à curva semanal do mês`;
+  };
+
+  function runWeekly(){
+    const st=typeof state==='function'?state():null;if(!st)return;
+    try{window.renderWeekly(st)}catch(e){}
+    try{window.renderWeeklyChannel(st)}catch(e){}
+    try{window.renderSizeWeekly()}catch(e){}
+  }
+  for(const id of ['month','bu','dim','channel']){
+    const e=document.getElementById(id);if(e&&!e.dataset.weeklyv51){e.addEventListener('change',()=>{setTimeout(runWeekly,60);setTimeout(runWeekly,500)},true);e.dataset.weeklyv51='1'}
+  }
+  document.addEventListener('click',e=>{if(e.target.closest?.('[data-tab="weekly"]'))setTimeout(runWeekly,140)},true);
+  const old=window.render;if(typeof old==='function'&&!old.__weeklyv51){const w=function(){const r=old.apply(this,arguments);setTimeout(runWeekly,360);return r};w.__weeklyv51=true;window.render=w}
+  setTimeout(runWeekly,350);setTimeout(runWeekly,1600);
+})({"medium":{"SMB":{"Google":{"mql":33,"sql":6,"nb":4,"nmrr":316},"Meta":{"mql":102,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":2,"sql":1,"nb":1,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":1,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":0,"nb":0,"nmrr":0}}},"original":{"SMB":{"Google":{"mql":85,"sql":6,"nb":5,"nmrr":557.5},"Meta":{"mql":42,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":1,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":11,"sql":1,"nb":0,"nmrr":0}},"KA":{"Google":{"mql":13,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":0,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":4,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"latest":{"SMB":{"Google":{"mql":33,"sql":4,"nb":2,"nmrr":0},"Meta":{"mql":95,"sql":1,"nb":1,"nmrr":241.5},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":9,"sql":2,"nb":2,"nmrr":316}},"KA":{"Google":{"mql":7,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":2,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}}});
+</script>
 </body></html>
