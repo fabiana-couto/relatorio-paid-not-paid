@@ -3988,4 +3988,79 @@ setTimeout(render,450);setTimeout(render,1500);
   setTimeout(runWeekly,350);setTimeout(runWeekly,1600);
 })({"medium":{"SMB":{"Google":{"mql":33,"sql":6,"nb":4,"nmrr":316},"Meta":{"mql":102,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":2,"sql":1,"nb":1,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":1,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":0,"nb":0,"nmrr":0}}},"original":{"SMB":{"Google":{"mql":85,"sql":6,"nb":5,"nmrr":557.5},"Meta":{"mql":42,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":1,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":11,"sql":1,"nb":0,"nmrr":0}},"KA":{"Google":{"mql":13,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":0,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":4,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"latest":{"SMB":{"Google":{"mql":33,"sql":4,"nb":2,"nmrr":0},"Meta":{"mql":95,"sql":1,"nb":1,"nmrr":241.5},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":9,"sql":2,"nb":2,"nmrr":316}},"KA":{"Google":{"mql":7,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":2,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}}});
 </script>
+<script id="canonical-current-v52">
+(function canonicalCurrentV52(OCT,CAM_MQL){
+  const CH=['Google','Meta','LinkedIn','Outros'];
+  const num=v=>Number(v||0);
+  const zero=()=>({mql:0,sql:0,nb:0,nmrr:0});
+  const add=(a,b)=>({mql:num(a.mql)+num(b.mql),sql:num(a.sql)+num(b.sql),nb:num(a.nb)+num(b.nb),nmrr:num(a.nmrr)+num(b.nmrr)});
+  const prevCanon=window.canonicalMetricV27;
+  const prevCh=window.channelMetric;
+
+  function getOct(bu,dim,ch){
+    let out=zero(),bus=bu==='Todos'?['SMB','KA']:[bu];
+    for(const b of bus)out=add(out,OCT?.[dim]?.[b]?.[ch]||zero());
+    return out;
+  }
+  window.channelMetric=function(month,bu,dim,ch){
+    if(month==='Out/26')return getOct(bu,dim,ch);
+    return typeof prevCh==='function'?prevCh(month,bu,dim,ch):zero();
+  };
+  window.canonicalMetricV27=function(month,st,buArg,chArg){
+    const dim=typeof st==='string'?st:(st?.dim||'medium');
+    const bu=buArg||(st?.bu||'Todos');
+    const ch=chArg||(st?.ch||'Todos os canais');
+    if(month!=='Out/26')return typeof prevCanon==='function'?prevCanon(month,st,buArg,chArg):zero();
+    if(ch!=='Todos os canais')return getOct(bu,dim,ch);
+    return CH.reduce((a,c)=>add(a,getOct(bu,dim,c)),zero());
+  };
+  window.canonicalMetricV34=window.canonicalMetricV27;
+
+  // Current campaign MQL counts are refreshed from HubSpot contacts.
+  try{
+    if(window.CAM41){
+      for(const bu of ['SMB','KA']){
+        for(const v of Object.values(window.CAM41[bu]||{})){v.mql=0;if(v.quali!=null)v.quali=0}
+        for(const [name,count] of Object.entries(CAM_MQL[bu]||{})){
+          if(!window.CAM41[bu][name])window.CAM41[bu][name]={quali:0,mql:0,sql:0,nb:0,nmrr:0};
+          window.CAM41[bu][name].mql=count;
+          window.CAM41[bu][name].quali=count;
+        }
+      }
+    }
+  }catch(e){}
+
+  function refresh(){
+    const st=typeof state==='function'?state():null;if(!st)return;
+    try{
+      const k=document.getElementById('kpis');
+      if(k&&typeof fmtN==='function'&&typeof brl==='function'&&typeof pct==='function'){
+        const a=window.canonicalMetricV27(st.m,st),conv=a.mql?100*a.sql/a.mql:0;
+        const dimLabel=st.dim==='medium'?'Tipo de Mídia':st.dim==='original'?'Fonte Original':st.dim==='latest'?'Fonte Recente':'Campanha de Aquisição';
+        const vals=[
+          ['MQL',fmtN(a.mql)],
+          ['SQL',fmtN(a.sql)],
+          ['MQL → SQL',pct(conv)],
+          ['Novos Negócios',fmtN(a.nb)],
+          ['NMRR',brl(a.nmrr)]
+        ];
+        k.innerHTML=vals.map(([l,v])=>`<div class="card kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="hint">${st.m==='Out/26'?'Atualizado até 06/10/2026 · ':''}${dimLabel} · ${st.ch}</div></div>`).join('');
+      }
+    }catch(e){}
+    try{if(typeof window.renderWeekly==='function')window.renderWeekly(st)}catch(e){}
+    try{if(typeof window.renderWeeklyChannel==='function')window.renderWeeklyChannel(st)}catch(e){}
+    try{if(typeof window.renderSizeWeekly==='function')window.renderSizeWeekly()}catch(e){}
+    try{if(typeof window.renderChannelSummary28==='function')window.renderChannelSummary28()}catch(e){}
+    try{if(typeof renderChannelEvolution48==='function')renderChannelEvolution48()}catch(e){}
+  }
+  const old=window.render;
+  if(typeof old==='function'&&!old.__v52){
+    const w=function(){const r=old.apply(this,arguments);setTimeout(refresh,420);return r};w.__v52=true;window.render=w;
+  }
+  for(const id of ['month','bu','dim','channel']){
+    const e=document.getElementById(id);if(e&&!e.dataset.v52){e.addEventListener('change',()=>{setTimeout(refresh,100);setTimeout(refresh,700)},true);e.dataset.v52='1'}
+  }
+  setTimeout(refresh,400);setTimeout(refresh,1800);
+})({"medium":{"SMB":{"Google":{"mql":36,"sql":7,"nb":3,"nmrr":316},"Meta":{"mql":101,"sql":2,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":2,"nb":2,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":1,"nb":0,"nmrr":0}}},"original":{"SMB":{"Google":{"mql":86,"sql":8,"nb":5,"nmrr":557.5},"Meta":{"mql":41,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":1,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":11,"sql":3,"nb":0,"nmrr":0}},"KA":{"Google":{"mql":13,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":0,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":4,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"latest":{"SMB":{"Google":{"mql":34,"sql":7,"nb":2,"nmrr":0},"Meta":{"mql":94,"sql":2,"nb":1,"nmrr":241.5},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":9,"sql":2,"nb":2,"nmrr":316}},"KA":{"Google":{"mql":7,"sql":1,"nb":0,"nmrr":0},"Meta":{"mql":2,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":1,"sql":0,"nb":0,"nmrr":0}}},"campaign":{"SMB":{"Google":{"mql":36,"sql":7,"nb":3,"nmrr":316},"Meta":{"mql":101,"sql":2,"nb":0,"nmrr":0},"LinkedIn":{"mql":2,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":2,"nb":2,"nmrr":241.5}},"KA":{"Google":{"mql":7,"sql":0,"nb":0,"nmrr":0},"Meta":{"mql":3,"sql":0,"nb":0,"nmrr":0},"LinkedIn":{"mql":8,"sql":0,"nb":0,"nmrr":0},"Outros":{"mql":0,"sql":1,"nb":0,"nmrr":0}}}},{"SMB":{"geral_paid_perf_conversao_nonbranded_search_google":31,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":15,"geral_paid_perf_conversao_generic_performancemax_google":2,"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_img_meta_aon_fundo":61,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_img_meta_aon_fundo_v2_geracao_lm":19,"aquisicao_smb_geral_paid-digital_perf_conversao_gestao-financeira_gestao-de-pagamentos_conteudo-impulsionado_meta_aon_fundo":6,"google":2,"{campaign}":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_compras_geracao_lm":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":1},"KA":{"geral_paid_perf_conversao_generic_performancemax_google":1,"aquisicao_ka_geral_paid-digital_perf_conversao_portal-fornecedores_generico_conversa_linkedin_captura-de-demanda_fundo_geracao_lm":7,"aquisicao_cross_geral_paid-digital_perf_conversao_gestao-financeira_proprietario_conteudo-impulsionado_meta_webinar_perene_webinar-always-on-split-maio":2,"geral_paid_perf_conversao_nonbranded_search_google":4,"geral_paid_perf_conversao_institucional_search_google":2,"aquisicao_smb_geral_paid-digital_perf_conversao_saas_generico_video_meta_retargeting_fundo_id::120248979943420585":1,"aquisicao_ka_geral_paid-digital_perf_conversao_gestao-fornecedores_reforma-tributaria_conversa_linkedin_captura-de-demanda_fundo_cfos_geracao_lm":1}});
+</script>
 </body></html>
