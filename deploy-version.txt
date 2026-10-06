@@ -1,5 +1,0 @@
-Dashboard Paid Intelligence Qive
-Versão: v45
-Publicado em: 2026-10-05
-Arquivo: dashboard-v45.html
-Ajustes: seletor pesquisável de campanhas, campanhas corrigidas, evolução mensal por entrada corrigida.
