@@ -3127,12 +3127,29 @@ setTimeout(render,450);setTimeout(render,1500);
   const months=()=>{const a=(typeof HIST_MONTHS!=='undefined'?HIST_MONTHS.slice():(DATA?.months||[]).slice()).filter((x,i,r)=>r.indexOf(x)===i);if(!a.includes('Out/26'))a.push('Out/26');return a};
   const state54=()=>{try{const s=state();return {...s,m:normMonth(s.m),c:normMonth(s.c)}}catch(e){return {bu:'Todos',dim:'medium',ch:'Todos os canais',front:'Todas',m:'Out/26',c:'__none__'}}};
 
-  function histChannel(month,bu,dim,ch){
-    const i=typeof HIST_MONTHS!=='undefined'?HIST_MONTHS.indexOf(month):-1;if(i<0)return z();
+  function rawHistChannel54(month,bu,dim,ch){
     const bus=bu==='Todos'?['SMB','KA']:[bu];let out=z();
+    if(month==='Set/26 MTD'&&window.V41?.[dim]?.['Set/26 MTD']){
+      for(const b of bus)out=add(out,window.V41[dim]['Set/26 MTD']?.[b]?.[ch]||z());
+      return out;
+    }
+    const i=typeof HIST_MONTHS!=='undefined'?HIST_MONTHS.indexOf(month):-1;if(i<0)return z();
     for(const b of bus){
       const v=CHANNEL_DIM?.[dim]?.[b]?.[ch];if(!v)continue;
       out=add(out,{mql:n(v.mql?.[i]),sql:n(v.sql?.[i]),nb:n(v.nb?.[i]),nmrr:n(v.nmrr?.[i])});
+    }
+    return out;
+  }
+  function mediumTarget54(month,bu){
+    return CH.reduce((a,ch)=>add(a,rawHistChannel54(month,bu,'medium',ch)),z());
+  }
+  function histChannel(month,bu,dim,ch){
+    const raw=rawHistChannel54(month,bu,dim,ch);
+    if(dim==='medium')return raw;
+    const target=mediumTarget54(month,bu),sum=CH.reduce((a,c)=>add(a,rawHistChannel54(month,bu,dim,c)),z()),out=z();
+    for(const k of METRICS){
+      if(n(sum[k])>0)out[k]=n(raw[k])*n(target[k])/n(sum[k]);
+      else out[k]=(ch==='Outros'?n(target[k]):0);
     }
     return out;
   }
@@ -3144,7 +3161,8 @@ setTimeout(render,450);setTimeout(render,1500);
   function canonical54(month,s){
     month=normMonth(month);const st={...state54(),...(s||{})};
     if(st.ch!=='Todos os canais')return channelMetric54(month,st.bu,st.dim,st.ch);
-    return CH.reduce((a,ch)=>add(a,channelMetric54(month,st.bu,st.dim,ch)),z());
+    if(month==='Out/26')return CH.reduce((a,ch)=>add(a,channelMetric54(month,st.bu,st.dim,ch)),z());
+    return mediumTarget54(month,st.bu);
   }
   window.channelMetric=channelMetric54;
   window.canonicalMetricV27=canonical54;
@@ -3211,7 +3229,7 @@ setTimeout(render,450);setTimeout(render,1500);
 
   function renderChannelSummary54(){
     const s=state54(),chs=s.ch==='Todos os canais'?CH:[s.ch],rows=chs.map(ch=>({ch,...channelMetric54(s.m,s.bu,s.dim,ch)})),tot=rows.reduce((a,r)=>add(a,r),z());
-    const body=document.getElementById('channelSummaryV22');if(body)body.innerHTML=rows.map(r=>`<tr><td><span class="pill">${r.ch}</span></td><td class="num">${fmt(r.mql)}</td><td class="num">${tot.mql?pct(100*r.mql/tot.mql):'—'}</td><td class="num">${fmt(r.sql)}</td><td class="num">${r.mql?pct(100*r.sql/r.mql):'—'}</td><td class="num">${fmt(r.nb)}</td><td class="num">${tot.nb?pct(100*r.nb/tot.nb):'—'}</td><td class="num">${money(r.nmrr)}</td><td class="num">${r.nb?money(r.nmrr/r.nb):'—'}</td><td class="num">${r.mql?money(r.nmrr/r.mql):'—'}</td></tr>`).join('')+`<tr class="total-row-v28"><td>Total do filtro</td><td class="num">${fmt(tot.mql)}</td><td class="num">${tot.mql?'100,0%':'—'}</td><td class="num">${fmt(tot.sql)}</td><td class="num">${tot.mql?pct(100*tot.sql/tot.mql):'—'}</td><td class="num">${fmt(tot.nb)}</td><td class="num">${tot.nb?'100,0%':'—'}</td><td class="num">${money(tot.nmrr)}</td><td class="num">${tot.nb?money(tot.nmrr/tot.nb):'—'}</td><td class="num">${tot.mql?money(tot.nmrr/tot.mql):'—'}</td></tr>`;
+    const body=document.getElementById('channelSummaryV22');const canonicalTotal=canonical54(s.m,s);tot.mql=canonicalTotal.mql;tot.sql=canonicalTotal.sql;tot.nb=canonicalTotal.nb;tot.nmrr=canonicalTotal.nmrr;if(body)body.innerHTML=rows.map(r=>`<tr><td><span class="pill">${r.ch}</span></td><td class="num">${fmt(r.mql)}</td><td class="num">${tot.mql?pct(100*r.mql/tot.mql):'—'}</td><td class="num">${fmt(r.sql)}</td><td class="num">${r.mql?pct(100*r.sql/r.mql):'—'}</td><td class="num">${fmt(r.nb)}</td><td class="num">${tot.nb?pct(100*r.nb/tot.nb):'—'}</td><td class="num">${money(r.nmrr)}</td><td class="num">${r.nb?money(r.nmrr/r.nb):'—'}</td><td class="num">${r.mql?money(r.nmrr/r.mql):'—'}</td></tr>`).join('')+`<tr class="total-row-v28"><td>Total do filtro</td><td class="num">${fmt(tot.mql)}</td><td class="num">${tot.mql?'100,0%':'—'}</td><td class="num">${fmt(tot.sql)}</td><td class="num">${tot.mql?pct(100*tot.sql/tot.mql):'—'}</td><td class="num">${fmt(tot.nb)}</td><td class="num">${tot.nb?'100,0%':'—'}</td><td class="num">${money(tot.nmrr)}</td><td class="num">${tot.nb?money(tot.nmrr/tot.nb):'—'}</td><td class="num">${tot.mql?money(tot.nmrr/tot.mql):'—'}</td></tr>`;
     const sub=document.querySelector('#channelSummarySection .title span');if(sub)sub.textContent=`${s.m==='Out/26'?'Out/26 MTD':s.m} · ${dimLabel(s.dim)} · ${s.bu} · ${s.ch}`;
   }
 
@@ -3337,7 +3355,7 @@ setTimeout(render,450);setTimeout(render,1500);
     .campaign-modal-box54{background:#fff;border-radius:14px;width:min(900px,95vw);max-height:82vh;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.22)}
     .campaign-modal-head54{display:flex;justify-content:space-between;align-items:center;font-size:16px}.campaign-modal-head54 button{border:0;background:none;font-size:26px;cursor:pointer}
     .campaign-checks54{max-height:52vh;overflow:auto;border:1px solid #e4e7eb;border-radius:10px;padding:6px}.campaign-checks54 label{display:grid;grid-template-columns:20px 1fr auto;gap:8px;align-items:center;padding:8px;border-bottom:1px solid #f0f1f3;font-size:11px}.campaign-checks54 label:last-child{border:0}
-    .campaign-modal-actions54{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}.campaign-modal-actions54 button,#campaignPickerBtn54{padding:8px 12px;border:1px solid #d9dde4;border-radius:8px;background:#fff;cursor:pointer}.campaign-modal-actions54 .primary{background:#111;color:#fff;border-color:#111}
+    .campaign-modal-actions54{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}.campaign-modal-actions54 button,#campaignPickerBtn54{padding:8px 12px;border:1px solid #d9dde4;border-radius:8px;background:#fff;cursor:pointer}.campaign-modal-actions54 .primary{background:#111;color:#fff;border-color:#111}#campaignTopBtn,#campaignAllBtn{display:none!important}
     `;document.head.appendChild(st);
   }
 
