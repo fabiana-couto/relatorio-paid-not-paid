@@ -3381,4 +3381,296 @@ setTimeout(refresh,100);setTimeout(refresh,1200);
   setTimeout(render,250);setTimeout(render,1300);
 })();
 </script>
+<script id="dashboard-fixes-v48">
+(function fixDashboardV48(){
+  const CHS=['Google','Meta','LinkedIn','Outros'];
+  const CATS=['Forms','Trial','WhatsApp','Webinar','Material Rico','Evento Proprietário','LinkedIn Inbound'];
+  const MONTHS_ENTRY=['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26','Ago/26','Set/26 MTD','Out/26'];
+  const E={
+    SMB:{
+      Google:{'Forms':[222,425,822,1007,560,554,455,452,363,31],'Trial':[32,30,28,15,8,9,14,16,9,2],'WhatsApp':[18,3,8,12,34,12,13,10,8,0],'Webinar':[0,0,0,0,0,0,0,0,0,0],'Material Rico':[0,0,0,0,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,0,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,0,0]},
+      Meta:{'Forms':[251,100,31,79,42,135,334,399,333,99],'Trial':[1,0,0,2,0,1,1,1,0,1],'WhatsApp':[14,1,1,1,1,1,0,2,0,0],'Webinar':[0,0,0,0,0,0,0,0,0,0],'Material Rico':[1,3,7,1,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,0,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,0,0]},
+      LinkedIn:{'Forms':[0,0,9,0,0,0,3,3,6,2],'Trial':[1,0,1,0,0,0,0,0,0,0],'WhatsApp':[0,0,0,0,1,0,0,0,0,0],'Webinar':[0,0,0,0,0,0,0,0,0,0],'Material Rico':[0,0,0,0,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,0,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,0,0]},
+      Outros:{'Forms':[16,20,0,1,26,43,51,50,18,2],'Trial':[1,0,0,1,0,0,0,0,0,0],'WhatsApp':[5,2,0,0,3,7,5,5,8,0],'Webinar':[0,0,0,0,0,0,0,0,0,0],'Material Rico':[0,0,0,0,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,0,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,0,0]}
+    },
+    KA:{
+      Google:{'Forms':[74,28,27,24,31,28,24,20,17,6],'Trial':[20,2,5,4,2,4,4,2,1,0],'WhatsApp':[5,0,1,2,4,0,0,0,0,0],'Webinar':[0,0,0,0,0,1,0,0,0,0],'Material Rico':[0,0,0,0,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,0,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,0,0]},
+      Meta:{'Forms':[21,14,0,5,4,10,22,18,14,1],'Trial':[5,0,0,0,0,0,0,1,0,0],'WhatsApp':[1,0,0,0,1,0,0,0,0,0],'Webinar':[11,0,0,0,32,27,30,30,18,2],'Material Rico':[3,0,0,0,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,20,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,0,0]},
+      LinkedIn:{'Forms':[1,0,2,3,0,1,23,19,74,8],'Trial':[1,0,0,0,0,0,0,0,0,0],'WhatsApp':[0,0,0,0,0,0,0,0,0,0],'Webinar':[5,0,0,0,15,22,20,22,7,0],'Material Rico':[37,40,16,0,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,3,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,35,0]},
+      Outros:{'Forms':[5,3,1,0,6,8,11,6,2,0],'Trial':[0,0,0,0,0,0,0,0,0,0],'WhatsApp':[2,0,0,0,0,0,0,1,1,0],'Webinar':[0,0,0,0,2,0,0,0,0,0],'Material Rico':[0,0,0,0,0,0,0,0,0,0],'Evento Proprietário':[0,0,0,0,0,0,0,0,0,0],'LinkedIn Inbound':[0,0,0,0,0,0,0,0,0,0]}
+    }
+  };
+  const OCT_SEG={
+    SMB:{
+      PP:{Google:{mql:27,sql:6,nb:3,nmrr:316},Meta:{mql:86,sql:0,nb:0,nmrr:0},LinkedIn:{mql:1,sql:0,nb:0,nmrr:0},Outros:{mql:1,sql:1,nb:1,nmrr:241.5}},
+      P:{Google:{mql:6,sql:0,nb:0,nmrr:0},Meta:{mql:14,sql:0,nb:0,nmrr:0},LinkedIn:{mql:1,sql:0,nb:0,nmrr:0},Outros:{mql:1,sql:0,nb:0,nmrr:0}},
+      Contador:{},Mid:{},Enterprise:{},NaoClassificado:{}
+    },
+    KA:{
+      PP:{},P:{},Contador:{},
+      Mid:{Google:{mql:4,sql:0,nb:0,nmrr:0},LinkedIn:{mql:1,sql:1,nb:0,nmrr:0}},
+      Enterprise:{Google:{mql:3,sql:0,nb:0,nmrr:0},Meta:{mql:2,sql:0,nb:0,nmrr:0},LinkedIn:{mql:1,sql:0,nb:0,nmrr:0}},
+      NaoClassificado:{LinkedIn:{mql:6,sql:0,nb:0,nmrr:0},Meta:{mql:1,sql:0,nb:0,nmrr:0}}
+    }
+  };
+  const LOST_NOW={
+    SMB:{
+      Todos:{total:98,reasons:[["[Fluxo de trabalho] Descarte automático",32],["Busca aleatória | Fora do escopo",20],["Não quis dar continuidade ao teste / Conversa | Conversa e chat",16],["Não conseguimos contato | Conversa e chat",10],["Solicitou o cancelamento do trial | Conversa e chat",5],["Conta não atende/parou de responder | Conversa e chat",3],["Não informado",3],["Preço alto | Proposta e valores",2],["Consulta notas emitidas/NFCe | Produto",1],["Já é cliente/assinante | Questões operacionais (Hubspot)",1],["Emissor de notas | Produto",1],["Duplicado | Questões operacionais (Hubspot)",1]]},
+      Google:{total:35,reasons:[["[Fluxo de trabalho] Descarte automático",18],["Solicitou o cancelamento do trial | Conversa e chat",3],["Não quis dar continuidade ao teste / Conversa | Conversa e chat",3],["Busca aleatória | Fora do escopo",3],["Preço alto | Proposta e valores",2],["Consulta notas emitidas/NFCe | Produto",1],["Emissor de notas | Produto",1],["Recuperação de Notas | Fora do escopo",1],["Conta não atende/parou de responder | Conversa e chat",1],["Não conseguimos contato | Conversa e chat",1],["Não informado",1]]},
+      Meta:{total:52,reasons:[["Busca aleatória | Fora do escopo",16],["[Fluxo de trabalho] Descarte automático",14],["Não quis dar continuidade ao teste / Conversa | Conversa e chat",10],["Não conseguimos contato | Conversa e chat",6],["Solicitou o cancelamento do trial | Conversa e chat",2],["Conta não atende/parou de responder | Conversa e chat",1],["[Fluxo de trabalho] Descarte automático | Questões operacionais (Hubspot)",1],["Segmento de empresa | Fora do Escopo",1],["Não informado",1]]},
+      LinkedIn:{total:3,reasons:[["Duplicado | Questões operacionais (Hubspot)",1],["Não quis dar continuidade ao teste / Conversa | Conversa e chat",1],["Não conseguimos contato | Conversa e chat",1]]},
+      Outros:{total:8,reasons:[["Não conseguimos contato | Conversa e chat",2],["Não quis dar continuidade ao teste / Conversa | Conversa e chat",2],["Já é cliente/assinante | Questões operacionais (Hubspot)",1],["Busca aleatória | Fora do escopo",1],["Não informado",1],["Conta não atende/parou de responder | Conversa e chat",1]]}
+    },
+    KA:{
+      Todos:{total:1,reasons:[["Optou por um concorrente | Proposta e valores",1]]},
+      Google:{total:0,reasons:[]},Meta:{total:0,reasons:[]},LinkedIn:{total:0,reasons:[]},
+      Outros:{total:1,reasons:[["Optou por um concorrente | Proposta e valores",1]]}
+    }
+  };
+
+  const n=v=>Number(v||0);
+  const z=()=>({mql:0,sql:0,nb:0,nmrr:0});
+  const add=(a,b)=>({mql:n(a?.mql)+n(b?.mql),sql:n(a?.sql)+n(b?.sql),nb:n(a?.nb)+n(b?.nb),nmrr:n(a?.nmrr)+n(b?.nmrr)});
+  const fmt=v=>typeof fmtN==='function'?fmtN(v):Math.round(n(v)).toLocaleString('pt-BR');
+  const money=v=>typeof brl==='function'?brl(v):n(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const pc=v=>typeof pct==='function'?pct(v):n(v).toFixed(1).replace('.',',')+'%';
+  const stateNow=()=>{try{return typeof state==='function'?state():null}catch(e){return null}};
+  const months=()=>{
+    const a=(typeof DATA!=='undefined'&&Array.isArray(DATA.months))?DATA.months.slice():(typeof HIST_MONTHS!=='undefined'?HIST_MONTHS.slice():[]);
+    if(!a.includes('Out/26'))a.push('Out/26');
+    return a;
+  };
+  const svg=(series,labels)=>{
+    try{return typeof svgLines==='function'?svgLines(series,labels):'<div class="note">Gráfico indisponível.</div>'}
+    catch(e){return '<div class="note">Gráfico indisponível.</div>'}
+  };
+  const entrySelected=()=>document.getElementById('entryFilter')?.value||'Todos';
+  const entryOk=(name)=>{
+    const en=entrySelected();if(en==='Todos')return true;
+    try{return typeof window.entryMatchCampaignV22==='function'?window.entryMatchCampaignV22(name,en):true}catch(e){return true}
+  };
+  const front=(name,m)=>{
+    try{return typeof campaignInfo==='function'?(campaignInfo(name,m)?.front||'Não classificada'):'Não classificada'}catch(e){return 'Não classificada'}
+  };
+  const campChannel=(name,m,v)=>{
+    if(v?.channel&&CHS.includes(v.channel))return v.channel;
+    try{if(typeof platform==='function')return platform(name,m)}catch(e){}
+    const x=String(name).toLowerCase();
+    if(x.includes('linkedin'))return 'LinkedIn';
+    if(x.includes('meta')||x.includes('facebook'))return 'Meta';
+    if(x.includes('google')||x.includes('search'))return 'Google';
+    return 'Outros';
+  };
+
+  function campaignPoint(name,m,bu){
+    const out={quali:0,mql:0,sql:0,nb:0,nmrr:0,channel:null};
+    const bus=bu==='Todos'?['SMB','KA']:[bu];
+    if(m==='Out/26'&&window.CAM41){
+      for(const b of bus){const v=window.CAM41?.[b]?.[name];if(v){for(const k of ['quali','mql','sql','nb','nmrr'])out[k]+=n(v[k]);out.channel=v.channel||out.channel}}
+      return out;
+    }
+    if(m==='Set/26 MTD'&&typeof DATA!=='undefined'&&DATA.campaignSep){
+      for(const b of bus){const v=DATA.campaignSep?.[b]?.[name];if(v)for(const k of ['quali','mql','sql','nb','nmrr'])out[k]+=n(v[k])}
+      return out;
+    }
+    if(m==='Ago/26'&&typeof DATA!=='undefined'&&DATA.campaignAug){
+      for(const b of bus){const v=DATA.campaignAug?.[b]?.[name];if(v)for(const k of ['quali','mql','sql','nb','nmrr'])out[k]+=n(v[k])}
+      return out;
+    }
+    try{
+      if(typeof HIST_CAMPAIGN!=='undefined'&&typeof HIST_MONTHS!=='undefined'){
+        const i=HIST_MONTHS.indexOf(m);
+        if(i>=0)for(const b of bus){const v=HIST_CAMPAIGN?.[b]?.[name];if(v)for(const k of ['mql','sql','nb','nmrr'])out[k]+=n(v[k]?.[i])}
+      }
+    }catch(e){}
+    return out;
+  }
+  function allCampaignNames(bu){
+    const set=new Set(),bus=bu==='Todos'?['SMB','KA']:[bu];
+    try{if(typeof HIST_CAMPAIGN!=='undefined')for(const b of bus)Object.keys(HIST_CAMPAIGN[b]||{}).forEach(x=>set.add(x))}catch(e){}
+    try{for(const b of bus)Object.keys(window.CAM41?.[b]||{}).forEach(x=>set.add(x))}catch(e){}
+    try{for(const b of bus)Object.keys(DATA?.campaignSep?.[b]||{}).forEach(x=>set.add(x))}catch(e){}
+    return [...set];
+  }
+  function campaignRows(s,metric){
+    const rows=[];
+    for(const name of allCampaignNames(s.bu)){
+      const v=campaignPoint(name,s.m,s.bu),ch=campChannel(name,s.m,v),fr=front(name,s.m);
+      if(s.ch!=='Todos os canais'&&ch!==s.ch)continue;
+      if(s.front!=='Todas'&&fr!==s.front)continue;
+      if(!entryOk(name))continue;
+      let val=v[metric];
+      if(metric==='conv')val=v.mql?100*v.sql/v.mql:null;
+      if(metric==='spend'||metric==='cpl'||metric==='cpmql'||metric==='cpsql'||metric==='cpnb'||metric==='roas'){
+        let sp=0;try{sp=n(campaignInfo(name,s.m)?.sp)}catch(e){}
+        if(metric==='spend')val=sp||null;
+        if(metric==='cpl')val=sp&&v.quali?sp/v.quali:null;
+        if(metric==='cpmql')val=sp&&v.mql?sp/v.mql:null;
+        if(metric==='cpsql')val=sp&&v.sql?sp/v.sql:null;
+        if(metric==='cpnb')val=sp&&v.nb?sp/v.nb:null;
+        if(metric==='roas')val=sp?v.nmrr/sp:null;
+      }
+      if(val==null||!Number.isFinite(Number(val)))continue;
+      rows.push({name,v,ch,front:fr,val:Number(val)});
+    }
+    const dir=document.getElementById('campaignSortDir')?.value||'desc';
+    rows.sort((a,b)=>dir==='asc'?a.val-b.val:b.val-a.val);
+    const top=document.getElementById('campaignTopN')?.value||'10';
+    return top==='all'?rows:rows.slice(0,Number(top));
+  }
+
+  function renderChannelEvolution48(){
+    const s=stateNow(),mql=document.getElementById('channelEvolutionMql'),sql=document.getElementById('channelEvolutionSql');if(!s||!mql||!sql)return;
+    const sec=mql.closest('section');if(sec)sec.style.display='';
+    const ms=months(),chs=s.ch==='Todos os canais'?CHS:[s.ch];
+    const read=(mon,ch)=>{try{return typeof channelMetric==='function'?channelMetric(mon,s.bu,s.dim,ch):z()}catch(e){return z()}};
+    mql.innerHTML=svg(chs.map(ch=>({name:ch,data:ms.map(mon=>n(read(mon,ch).mql))})),ms);
+    sql.innerHTML=svg(chs.map(ch=>({name:ch,data:ms.map(mon=>n(read(mon,ch).sql))})),ms);
+    const dl=s.dim==='medium'?'Tipo de Mídia':s.dim==='original'?'Fonte Original':s.dim==='latest'?'Fonte Recente':'Campanha de Aquisição';
+    const sub=`${dl} · ${s.bu} · ${s.ch}`;
+    const a=document.getElementById('channelEvoMqlSub'),b=document.getElementById('channelEvoSqlSub');if(a)a.textContent=sub;if(b)b.textContent=sub;
+  }
+
+  function renderCampaignEvolution48(forceTop){
+    const s=stateNow(),sel=document.getElementById('campaignGraphSelect'),mql=document.getElementById('campaignEvolutionMql'),sql=document.getElementById('campaignEvolutionSql');if(!s||!sel||!mql||!sql)return;
+    const names=allCampaignNames(s.bu).filter(name=>{
+      const v=campaignPoint(name,s.m,s.bu),ch=campChannel(name,s.m,v);
+      return (s.ch==='Todos os canais'||ch===s.ch)&&(s.front==='Todas'||front(name,s.m)===s.front)&&entryOk(name);
+    });
+    const keep=new Set([...sel.selectedOptions].map(o=>o.value));
+    const ranked=names.map(name=>({name,v:campaignPoint(name,s.m,s.bu).mql})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+    sel.innerHTML=names.sort().map(name=>`<option value="${String(name).replace(/"/g,'&quot;')}">${name}</option>`).join('');
+    let chosen=[...keep].filter(x=>names.includes(x));
+    if(forceTop||!chosen.length)chosen=ranked.slice(0,5).map(x=>x.name);
+    [...sel.options].forEach(o=>o.selected=chosen.includes(o.value));
+    if(!chosen.length){mql.innerHTML=sql.innerHTML='<div class="note">Sem campanhas com dados para os filtros selecionados.</div>';return}
+    const ms=months();
+    mql.innerHTML=svg(chosen.map(name=>({name:typeof shortCampaign==='function'?shortCampaign(name):name,data:ms.map(mon=>campaignPoint(name,mon,s.bu).mql)})),ms);
+    sql.innerHTML=svg(chosen.map(name=>({name:typeof shortCampaign==='function'?shortCampaign(name):name,data:ms.map(mon=>campaignPoint(name,mon,s.bu).sql)})),ms);
+    const sub=`${chosen.length} campanha(s) · ${s.bu} · ${s.ch} · ${s.front}${entrySelected()!=='Todos'?' · '+entrySelected():''}`;
+    const a=document.getElementById('campaignEvoMqlSub'),b=document.getElementById('campaignEvoSqlSub');if(a)a.textContent=sub;if(b)b.textContent=sub;
+  }
+
+  function renderCampaignExplorer48(){
+    const s=stateNow();if(!s)return;
+    const metric=document.getElementById('campaignExplorerMetric')?.value||'mql',rows=campaignRows(s,metric);
+    const mode=document.getElementById('campaignViewMode')?.value||'both';
+    document.getElementById('campaignVisualWrap')?.classList.toggle('view-hidden',mode==='table');
+    document.getElementById('campaignTableWrap')?.classList.toggle('view-hidden',mode==='visual');
+    const rank=document.getElementById('campaignRankChart'),hist=document.getElementById('campaignHistoryChart');
+    if(rank&&mode!=='table'){
+      const max=Math.max(1,...rows.map(r=>Math.abs(r.val)));
+      rank.innerHTML=rows.length?rows.map(r=>`<div class="rank-row" title="${r.name.replace(/"/g,'&quot;')}"><div class="rank-name"><span class="pill">${r.front}</span> ${typeof shortCampaign==='function'?shortCampaign(r.name):r.name}</div><div class="rank-track"><div class="rank-fill" style="width:${Math.max(1,Math.abs(r.val)/max*100)}%"></div></div><div class="rank-value">${metric==='nmrr'||metric.startsWith('cp')||metric==='cpl'||metric==='spend'?money(r.val):metric==='conv'?pc(r.val):metric==='roas'?r.val.toFixed(2).replace('.',',')+'x':fmt(r.val)}</div></div>`).join(''):`<div class="note">Sem campanhas com ${metric.toUpperCase()} disponível para este filtro.</div>`;
+      const t=document.getElementById('campaignRankTitle'),sub=document.getElementById('campaignRankSub');if(t)t.textContent='Ranking · '+(metric==='mql'?'MQL':metric.toUpperCase());if(sub)sub.textContent=`${s.m} · ${s.bu} · ${s.ch}`;
+    }
+    if(hist&&mode!=='table'){
+      const top5=rows.slice(0,5),ms=months();
+      hist.innerHTML=top5.length?svg(top5.map(r=>({name:typeof shortCampaign==='function'?shortCampaign(r.name):r.name,data:ms.map(mon=>{
+        const v=campaignPoint(r.name,mon,s.bu);
+        if(metric==='mql'||metric==='sql'||metric==='nb'||metric==='nmrr')return n(v[metric]);
+        if(metric==='conv')return v.mql?100*v.sql/v.mql:0;
+        return null;
+      })})),ms):'<div class="note">Sem histórico para a métrica selecionada.</div>';
+      const t=document.getElementById('campaignHistoryTitle'),sub=document.getElementById('campaignHistorySub');if(t)t.textContent='Histórico · '+(metric==='mql'?'MQL':metric.toUpperCase());if(sub)sub.textContent=top5.length?`Top ${top5.length} do ranking atual`:'Sem série';
+    }
+  }
+
+  const previousSegments=window.renderSegments;
+  function octSeg(seg,bu,ch){
+    let out=z(),bus=bu==='Todos'?['SMB','KA']:[bu],chs=ch==='Todos os canais'?CHS:[ch];
+    for(const b of bus)for(const c of chs)out=add(out,OCT_SEG?.[b]?.[seg]?.[c]||z());
+    return out;
+  }
+  function segPoint(seg,m,bu,ch){
+    if(m==='Out/26')return octSeg(seg,bu,ch);
+    if(ch==='Todos os canais'){
+      try{
+        const r=typeof window.segmentRaw==='function'?window.segmentRaw(seg,m,bu):null;
+        if(r)return {mql:n(r.mql),sql:n(r.sql),nb:n(r.nb),nmrr:n(r.nmrr)};
+      }catch(e){}
+    }
+    return z();
+  }
+  window.renderSegments=function(s){
+    const body=document.getElementById('segments');if(!body)return;
+    if(s.dim!=='medium'){if(typeof previousSegments==='function')return previousSegments(s);return}
+    if(s.m!=='Out/26'&&s.ch!=='Todos os canais'){if(typeof previousSegments==='function')return previousSegments(s);return}
+    const labels=[['PP','PP'],['P','P'],['Contador','Contador'],['Mid','Mid (M)'],['Enterprise','Enterprise (G + XG)'],['NaoClassificado','Não classificado']];
+    const total=typeof window.canonicalMetricV27==='function'?window.canonicalMetricV27(s.m,s):z();
+    let sum=z(),html='';
+    for(const [key,label] of labels){
+      const a=segPoint(key,s.m,s.bu,s.ch),b=s.c&&s.c!=='__none__'?segPoint(key,s.c,s.bu,s.ch):null;
+      sum=add(sum,a);
+      if(key==='NaoClassificado'&&!a.mql&&!a.sql&&!a.nb&&!a.nmrr)continue;
+      html+=`<tr><td><span class="pill">${label}</span></td><td class="num">${fmt(a.mql)}</td><td class="num">${fmt(a.sql)}</td><td class="num">${pc(a.mql?100*a.sql/a.mql:0)}</td><td class="num">${fmt(a.nb)}</td><td class="num">${money(a.nmrr)}</td><td class="num">${b?fmt(b.mql):'—'}</td><td class="num">${b?fmt(b.sql):'—'}</td><td class="num">${b?(a.mql-b.mql>=0?'+':'')+fmt(a.mql-b.mql):'—'}</td><td class="num">${b?(a.sql-b.sql>=0?'+':'')+fmt(a.sql-b.sql):'—'}</td></tr>`;
+    }
+    const gap={mql:n(total.mql)-n(sum.mql),sql:n(total.sql)-n(sum.sql),nb:n(total.nb)-n(sum.nb),nmrr:n(total.nmrr)-n(sum.nmrr)};
+    if(['mql','sql','nb','nmrr'].some(k=>Math.abs(gap[k])>.005))html+=`<tr class="reconcile-row-v34"><td>Reconciliação</td><td class="num">${fmt(gap.mql)}</td><td class="num">${fmt(gap.sql)}</td><td class="num">${gap.mql?pc(100*gap.sql/gap.mql):'—'}</td><td class="num">${fmt(gap.nb)}</td><td class="num">${money(gap.nmrr)}</td><td colspan="4"></td></tr>`;
+    html+=`<tr class="total-row-v34"><td>Total do filtro</td><td class="num">${fmt(total.mql)}</td><td class="num">${fmt(total.sql)}</td><td class="num">${pc(total.mql?100*total.sql/total.mql:0)}</td><td class="num">${fmt(total.nb)}</td><td class="num">${money(total.nmrr)}</td><td colspan="4"></td></tr>`;
+    body.innerHTML=html;
+    const sub=body.closest('section')?.querySelector('.title span');if(sub)sub.textContent=`PP · P · Contador · Mid (M) · Enterprise (G + XG) · ${s.m==='Out/26'?'Outubro MTD até 06/10':s.m}`;
+  };
+
+  function entryValue(cat,i,s){
+    const bus=s.bu==='Todos'?['SMB','KA']:[s.bu],chs=s.ch==='Todos os canais'?CHS:[s.ch];let v=0;
+    for(const b of bus)for(const c of chs)v+=n(E?.[b]?.[c]?.[cat]?.[i]);
+    return v;
+  }
+  window.renderEntriesV22=function(){
+    const s=stateNow(),trend=document.getElementById('entryTrendV22'),bars=document.getElementById('entryBarsV22');if(!s)return;
+    const en=entrySelected(),cats=en==='Todos'?CATS:[en],mi=Math.max(0,MONTHS_ENTRY.indexOf(s.m));
+    if(trend){
+      trend.innerHTML=svg(cats.map(cat=>({name:cat,data:MONTHS_ENTRY.map((_,i)=>entryValue(cat,i,s))})),MONTHS_ENTRY);
+      const sub=trend.closest('.card')?.querySelector('.title span');if(sub)sub.textContent=`Jan–Out/26 · ${s.bu} · ${s.ch}`;
+    }
+    if(bars){
+      const rows=CATS.map(cat=>({cat,v:entryValue(cat,mi,s)})).filter(x=>en==='Todos'||x.cat===en).sort((a,b)=>b.v-a.v),max=Math.max(1,...rows.map(x=>x.v));
+      bars.innerHTML=rows.map(x=>`<div class="entry-row"><b>${x.cat}</b><div class="entry-track"><div class="entry-fill" style="width:${x.v/max*100}%"></div></div><span>${fmt(x.v)} MQL</span><span></span></div>`).join('');
+    }
+  };
+
+  const previousLost=window.renderLost37;
+  function mergeLost(bu,ch){
+    if(bu!=='Todos')return LOST_NOW[bu]?.[ch]||{total:0,reasons:[]};
+    const parts=['SMB','KA'].map(b=>LOST_NOW[b]?.[ch]||{total:0,reasons:[]}),map={};let total=0;
+    for(const p of parts){total+=n(p.total);for(const [r,v] of p.reasons||[])map[r]=(map[r]||0)+n(v)}
+    return {total,reasons:Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,12)};
+  }
+  window.renderLost37=function(){
+    const s=stateNow();if(!s)return;
+    if(s.dim!=='medium'){if(typeof previousLost==='function')return previousLost();return}
+    const el=document.getElementById('lost37');if(!el)return;
+    const ch=s.ch==='Todos os canais'?'Todos':s.ch,cur=mergeLost(s.bu,ch),top=cur.reasons?.[0]||null;
+    let histVals=[],histLabs=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set'];
+    try{
+      const ms=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09'];
+      histVals=ms.map(m=>typeof lostGroup37==='function'?lostGroup37(m,'medium',s.bu,s.ch).total:0);
+    }catch(e){histVals=Array(9).fill(0)}
+    const vals=histVals.concat(cur.total),labs=histLabs.concat('Out MTD'),ytd=vals.reduce((a,b)=>a+n(b),0);
+    const reasonRows=(cur.reasons||[]).map(([r,v])=>`<tr><td>${r}</td><td class="num"><b>${fmt(v)}</b></td><td class="num">${cur.total?pc(100*v/cur.total):'0,0%'}</td></tr>`).join('');
+    el.innerHTML=`<div class="v37-info"><b>Critério:</b> negócios Paid em etapa Perdido pela data de entrada em Perdido. Outubro MTD atualizado até <b>06/10/2026</b>.</div><div class="v37-lost-kpis"><div class="card"><div class="lbl">Perdidos no mês</div><div class="value">${fmt(cur.total)}</div><div class="hint">Out/26 MTD</div></div><div class="card"><div class="lbl">Perdidos Jan–Out</div><div class="value">${fmt(ytd)}</div><div class="hint">${s.bu} · ${s.ch}</div></div><div class="card"><div class="lbl">Principal motivo</div><div class="v37-reason-main">${top?top[0]:'—'}</div><div class="hint">${top?`${fmt(top[1])} · ${pc(100*top[1]/Math.max(cur.total,1))}`:''}</div></div></div><div class="v37-lost-grid"><div class="card panel"><div class="title"><h2>Evolução mensal de perdidos</h2><span>Jan–Out/26 · ${s.bu} · ${s.ch}</span></div><div class="v37-chart">${svg([{name:'Perdidos',data:vals}],labs)}</div></div><div class="card scroll"><div class="title"><h2>Motivos de perdidos</h2><span>Out/26 MTD</span></div><table><thead><tr><th>Motivo</th><th class="num">Perdidos</th><th class="num">Share</th></tr></thead><tbody>${reasonRows||'<tr><td colspan="3">Sem dados.</td></tr>'}</tbody><tfoot><tr class="total-row"><td>Total do filtro</td><td class="num">${fmt(cur.total)}</td><td class="num">100,0%</td></tr></tfoot></table></div></div>`;
+  };
+
+  function runAll(){
+    try{renderChannelEvolution48()}catch(e){}
+    try{renderCampaignEvolution48(false)}catch(e){}
+    try{renderCampaignExplorer48()}catch(e){}
+    try{const s=stateNow();if(s)window.renderSegments(s)}catch(e){}
+    try{window.renderEntriesV22()}catch(e){}
+    try{window.renderLost37()}catch(e){}
+  }
+
+  const sel=document.getElementById('campaignGraphSelect');if(sel&&!sel.dataset.v48){sel.addEventListener('change',()=>setTimeout(()=>renderCampaignEvolution48(false),20));sel.dataset.v48='1'}
+  const top=document.getElementById('campaignTopBtn');if(top&&!top.dataset.v48){top.addEventListener('click',()=>renderCampaignEvolution48(true));top.dataset.v48='1'}
+  const all=document.getElementById('campaignAllBtn');if(all&&!all.dataset.v48){all.addEventListener('click',()=>{[...document.getElementById('campaignGraphSelect').options].forEach(o=>o.selected=true);renderCampaignEvolution48(false)});all.dataset.v48='1'}
+  for(const id of ['bu','dim','channel','front','month','entryFilter','campaignViewMode','campaignExplorerMetric','campaignTopN','campaignSortDir']){
+    const el=document.getElementById(id);if(el&&!el.dataset.v48){el.addEventListener('change',()=>{setTimeout(runAll,120);setTimeout(runAll,700)},true);el.dataset.v48='1'}
+  }
+  document.addEventListener('click',e=>{if(e.target.closest?.('.tab-v22'))setTimeout(runAll,220)},true);
+  const old=window.render;if(typeof old==='function'&&!old.__v48){
+    const w=function(){const r=old.apply(this,arguments);setTimeout(runAll,260);return r};w.__v48=true;window.render=w;
+  }
+  setTimeout(runAll,300);setTimeout(runAll,1500);
+})();
+</script>
 </body></html>
